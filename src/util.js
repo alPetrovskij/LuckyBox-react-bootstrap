@@ -110,6 +110,7 @@ export function getJson(url, arg) {
             }
         )
 }
+
 export function sendRequest(url) {
     this.setState({isLoading: true});
     const opt = {method: 'get'};

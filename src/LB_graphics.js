@@ -15,10 +15,11 @@ class Graphics extends React.Component {
             temperature3: '',
             temperature4: ''
         };
+        this.tickUrl = '/configs.json';
     }
     tickStart() {
         this.interval = setInterval(
-            () => this.getJson("/configs.json"),
+            () => this.getJson(this.tickUrl),
             1000
         );
         var data = [];
@@ -49,8 +50,6 @@ class Graphics extends React.Component {
         clearInterval(this.interval2);
     }
 
-    // componentDidMount() {
-    // }
     render() {
         return (
             <Tab.Pane eventKey="graphics" onEnter={this.tickStart} onExit={this.tickStop}>

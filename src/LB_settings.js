@@ -1,11 +1,12 @@
 import React from 'react';
 import {FormGroup, FormControl, Button, Form, Table, Alert, Tab} from 'react-bootstrap';
-import {handleChange, getJson, getValidationState} from './util'
+import {handleChange, getJson, getValidationState, sendRequest} from './util'
 
 class Settings extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.handleChange = handleChange.bind(this);
+        this.sendRequest = sendRequest.bind(this);
         this.getJson = getJson.bind(this);
         this.getValidationState = getValidationState.bind(this);
         this.setSSDP = this.setSSDP.bind(this);
@@ -16,7 +17,8 @@ class Settings extends React.Component {
         this.handleDismiss = this.handleDismiss.bind(this);
         this.handleShow = this.handleShow.bind(this);
         this.restart = this.restart.bind(this);
-        this.sendRequestArr = this.sendRequestArr.bind(this);
+        this.tickStart = this.tickStart.bind(this);
+        this.tickStop = this.tickStop.bind(this);
         this.state = {
             show: false,
             isLoading: false,
@@ -33,6 +35,23 @@ class Settings extends React.Component {
             ssidAP: '',
             passwordAP: ''
         };
+        this.tickUrl = '/configs.json';
+        this.setUrlSSDP = "/ssdp?ssdp=" + this.state.ssdp;
+        this.setUrlSSID = "/ssid?ssid=" + this.state.ssid + "&password=" + encodeURIComponent(this.state.password);
+        this.setUrlSSIDAP = "/ssidap?ssidAP=" + this.state.ssidAP + "&passwordAP=" + encodeURIComponent(this.state.passwordAP);
+        this.setUrlTIMEZONE = "/TimeZone?timezone=" + this.state.timezone;
+        this.setUrlRESTART = "/restart?device=ok";
+    }
+
+    tickStart() {
+        this.interval = setInterval(
+            () => this.getJson(this.tickUrl, 0),
+            1000
+        );
+    }
+
+    tickStop() {
+        clearInterval(this.interval);
     }
 
     handleDismiss() {
@@ -44,121 +63,71 @@ class Settings extends React.Component {
     }
 
     setSSDP() {
-        const url = "/ssdp?ssdp=" + this.state.ssdp;
-        this.sendRequestArr(url, 'isLoadingSSDP');
+        this.sendRequest(this.setUrlSSDP);
     }
 
     setSSID() {
-        const url = "/ssid?ssid=" + this.state.ssid + "&password=" + encodeURIComponent(this.state.password);
-        this.sendRequestArr(url, 'isLoadingSSID');
+        this.sendRequest(this.setUrlSSID);
         alert("Изменения вступят в силу после перезагрузки. Пожалуйста перезагрузите устройство.");
     }
 
     setSSIDAP() {
-        const url = "/ssidap?ssidAP=" + this.state.ssidAP + "&passwordAP=" + encodeURIComponent(this.state.passwordAP);
-        this.sendRequestArr(url, 'isLoadingSSIDAP');
+        this.sendRequest(this.setUrlSSIDAP);
         alert("Изменения вступят в силу после перезагрузки. Пожалуйста перезагрузите устройство.");
-
     }
 
     setTIMEZONE() {
-        const url = "/TimeZone?timezone=" + this.state.timezone;
-        this.sendRequestArr(url, 'isLoadingTIMEZONE');
+        this.sendRequest(this.setUrlTIMEZONE);
     }
 
     setAUTOTIMEZONE() {
         const set_date = new Date();
         const gmtHours = -set_date.getTimezoneOffset() / 60;
         this.setState({timezone: gmtHours});
-        const url = "/TimeZone?timezone=" + gmtHours;
-        this.sendRequestArr(url, 'isLoadingAUTOTIMEZONE');
+        this.sendRequest(this.setUrlTIMEZONE);
     }
 
     restart() {
         this.handleDismiss();
-        const url = "/restart?device=ok";
-        this.sendRequestArr(url, 'isLoadingRESTART');
-    }
-
-    sendRequestArr(url, respBool) {
-        this.setState({
-            isLoading: true,
-            [respBool]: true
-        });
-        const opt = {method: 'get'};
-        fetch(url, opt)
-            .then((response) => {
-                if (response.ok) {
-                    console.log('res.ok');
-                    this.setState({
-                        isLoading: false
-                    });
-                    setTimeout(() => {
-                        this.setState({
-                            [respBool]: false
-                        });
-                    }, 1000);
-                } else {
-                    console.log('Network response was not ok.');
-                }
-            });
-    }
-
-    componentDidMount() {
-        this.getJson("/configs.json")
+        this.sendRequest(this.setUrlRESTART);
     }
 
     render() {
         const {
-            isLoading,
-            isLoadingSSDP,
-            isLoadingSSID,
-            isLoadingSSIDAP,
-            isLoadingTIMEZONE,
-            isLoadingAUTOTIMEZONE,
-            isLoadingRESTART,
-            show,
-            ssdp,
-            ssid,
-            password,
-            ssidAP,
-            passwordAP,
-            timezone,
-        } = this.state;
-
-        const isvalidSSDP = /^[a-zA-Zа-яА-Я.]{1,15}$/.test(ssdp),
-            isvalidSSID = /^[a-zA-Zа-яА-Я.]{1,15}$/.test(ssid) && /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/.test(password),
-            isvalidSSIDAP = /^[a-zA-Zа-яА-Я.]{1,15}$/.test(ssidAP) && /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/.test(passwordAP),
+                isLoading,
+                isLoadingSSDP,
+                isLoadingSSID,
+                isLoadingSSIDAP,
+                isLoadingTIMEZONE,
+                isLoadingAUTOTIMEZONE,
+                isLoadingRESTART,
+                show,
+                ssdp,
+                ssid,
+                password,
+                ssidAP,
+                passwordAP,
+                timezone,
+            } = this.state,
+            isvalidSSDP = /^[0-9a-zA-Zа-яА-Я.()]{1,15}$/.test(ssdp),
+            isvalidSSID = /^[0-9a-zA-Zа-яА-Я.()]{1,15}$/.test(ssid) && /(?=.*\d)(?=.*[a-z]).{6,}/.test(password),
+            isvalidSSIDAP = /^[0-9a-zA-Zа-яА-Я.()]{1,15}$/.test(ssidAP) && /(?=.*\d)(?=.*[a-z]).{6,}/.test(passwordAP),
             isvalidTIMEZONE = /^[0-9]{1,3}$/.test(timezone);
 
         if (show) {
             return (
                 <Alert bsStyle="danger" onDismiss={this.handleDismiss}>
                     <h4>Вы действительно хотите перезагрузить устройство?</h4>
-                    {/*<p>*/}
-                    {/*Change this and that and try again. Duis mollis, est non commodo*/}
-                    {/*luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.*/}
-                    {/*Cras mattis consectetur purus sit amet fermentum.*/}
-                    {/*</p>*/}
                     <p>
-                        <Button
-                            bsStyle="danger"
-                            onClick={this.restart}
-                        >
-                            Да
-                        </Button>
+                        <Button bsStyle="danger" onClick={this.restart}>Да</Button>
                         <span> or </span>
-                        <Button
-                            onClick={this.handleDismiss}
-                        >
-                            Нет
-                        </Button>
+                        <Button onClick={this.handleDismiss}>Нет</Button>
                     </p>
                 </Alert>
             );
         }
         return (
-            <Tab.Pane eventKey="settings">
+            <Tab.Pane eventKey="settings" onEnter={this.tickStart} onExit={this.tickStop}>
                 <p></p>
                 <Table hover>
                     <tbody>
@@ -166,12 +135,7 @@ class Settings extends React.Component {
                         <td>Обновление</td>
                         <td>
                             <Form inline>
-                                <Button
-                                    href="/edit"
-                                    bsStyle="primary"
-                                    bsSize="small"
-                                    disabled={isLoading}
-                                >
+                                <Button href="/edit" bsStyle="primary" bsSize="small" disabled={isLoading}>
                                     Открыть редактор HTML
                                 </Button>
                             </Form>
@@ -182,19 +146,9 @@ class Settings extends React.Component {
                         <td>
                             <Form inline method="POST" action="/update">
                                 <FormGroup>
-                                    <FormControl
-                                        type="file"
-                                        name='file'
-                                        onChange={this.handleChange}
-                                    />
+                                    <FormControl type="file" name='file' onChange={this.handleChange}/>
                                 </FormGroup>{' '}
-                                <Button
-                                    type="submit"
-                                    bsStyle="primary"
-                                    disabled={isLoading}
-                                >
-                                    Загрузить
-                                </Button>
+                                <Button type="submit" bsStyle="primary" disabled={isLoading}>Загрузить</Button>
                             </Form>
                         </td>
                     </tr>
@@ -203,19 +157,9 @@ class Settings extends React.Component {
                         <td>
                             <Form inline>
                                 <FormGroup validationState={this.getValidationState(ssdp, 'name')}>
-                                    <FormControl
-                                        type="text"
-                                        value={ssdp}
-                                        placeholder="Имя устройства"
-                                        name='ssdp'
-                                        onChange={this.handleChange}
-                                    />
+                                    <FormControl type="text" value={ssdp} placeholder="Имя устройства" name='ssdp' onChange={this.handleChange}/>
                                 </FormGroup>{' '}
-                                <Button
-                                    bsStyle="primary"
-                                    onClick={!isLoading ? this.setSSDP : null}
-                                    disabled={isLoading || !isvalidSSDP}
-                                >
+                                <Button bsStyle="primary" onClick={!isLoading ? this.setSSDP : null} disabled={isLoading || !isvalidSSDP}>
                                     {isLoadingSSDP ? 'Подождите...' : 'Сохранить'}
                                 </Button>
                             </Form>
@@ -226,28 +170,12 @@ class Settings extends React.Component {
                         <td>
                             <Form inline>
                                 <FormGroup validationState={this.getValidationState(ssid, 'name')}>
-                                    <FormControl
-                                        type="text"
-                                        value={ssid}
-                                        placeholder="Имя WiFi сети"
-                                        name='ssid'
-                                        onChange={this.handleChange}
-                                    />
+                                    <FormControl type="text" value={ssid} placeholder="Имя WiFi сети" name='ssid' onChange={this.handleChange}/>
                                 </FormGroup>{' '}
                                 <FormGroup validationState={this.getValidationState(password, 'password')}>
-                                    <FormControl
-                                        type="text"
-                                        value={password}
-                                        placeholder="Пароль"
-                                        name='password'
-                                        onChange={this.handleChange}
-                                    />
+                                    <FormControl type="text" value={password} placeholder="Пароль" name='password' onChange={this.handleChange}/>
                                 </FormGroup>{' '}
-                                <Button
-                                    bsStyle="primary"
-                                    onClick={!isLoading ? this.setSSID : null}
-                                    disabled={isLoading || !isvalidSSID}
-                                >
+                                <Button bsStyle="primary" onClick={!isLoading ? this.setSSID : null} disabled={isLoading || !isvalidSSID}>
                                     {isLoadingSSID ? 'Подождите...' : 'Сохранить'}
                                 </Button>
                             </Form>
@@ -258,28 +186,12 @@ class Settings extends React.Component {
                         <td>
                             <Form inline>
                                 <FormGroup validationState={this.getValidationState(ssidAP, 'name')}>
-                                    <FormControl
-                                        type="text"
-                                        value={ssidAP}
-                                        placeholder="Имя WiFi сети"
-                                        name='ssidAP'
-                                        onChange={this.handleChange}
-                                    />
+                                    <FormControl type="text" value={ssidAP} placeholder="Имя WiFi сети" name='ssidAP' onChange={this.handleChange}/>
                                 </FormGroup>{' '}
                                 <FormGroup validationState={this.getValidationState(passwordAP, 'password')}>
-                                    <FormControl
-                                        type="text"
-                                        value={passwordAP}
-                                        placeholder="Пароль"
-                                        name='passwordAP'
-                                        onChange={this.handleChange}
-                                    />
+                                    <FormControl type="text" value={passwordAP} placeholder="Пароль" name='passwordAP' onChange={this.handleChange}/>
                                 </FormGroup>{' '}
-                                <Button
-                                    bsStyle="primary"
-                                    onClick={!isLoading ? this.setSSIDAP : null}
-                                    disabled={isLoading || !isvalidSSIDAP}
-                                >
+                                <Button bsStyle="primary" onClick={!isLoading ? this.setSSIDAP : null} disabled={isLoading || !isvalidSSIDAP}>
                                     {isLoadingSSIDAP ? 'Подождите...' : 'Сохранить'}
                                 </Button>
                             </Form>
@@ -290,26 +202,12 @@ class Settings extends React.Component {
                         <td>
                             <Form inline>
                                 <FormGroup validationState={this.getValidationState(timezone, 'timez')}>
-                                    <FormControl
-                                        type="text"
-                                        value={timezone}
-                                        placeholder="Часовой пояс"
-                                        name='timezone'
-                                        onChange={this.handleChange}
-                                    />
+                                    <FormControl type="text" value={timezone} placeholder="Часовой пояс" name='timezone' onChange={this.handleChange}/>
                                 </FormGroup>{' '}
-                                <Button
-                                    bsStyle="primary"
-                                    onClick={!isLoading ? this.setTIMEZONE : null}
-                                    disabled={isLoading || !isvalidTIMEZONE}
-                                >
+                                <Button bsStyle="primary" onClick={!isLoading ? this.setTIMEZONE : null} disabled={isLoading || !isvalidTIMEZONE}>
                                     {isLoadingTIMEZONE ? 'Подождите...' : 'Сохранить'}
                                 </Button>{' '}
-                                <Button
-                                    bsStyle="primary"
-                                    onClick={!isLoading ? this.setAUTOTIMEZONE : null}
-                                    disabled={isLoading}
-                                >
+                                <Button bsStyle="primary" onClick={!isLoading ? this.setAUTOTIMEZONE : null} disabled={isLoading}>
                                     {isLoadingAUTOTIMEZONE ? 'Подождите...' : 'Авто определение и сохранение зоны'}
                                 </Button>
                             </Form>
@@ -319,11 +217,7 @@ class Settings extends React.Component {
                         <td>Перезагрузка устройства</td>
                         <td>
                             <Form inline>
-                                <Button
-                                    bsStyle="danger"
-                                    onClick={!isLoading ? this.handleShow : null}
-                                    disabled={isLoading}
-                                >
+                                <Button bsStyle="danger" onClick={!isLoading ? this.handleShow : null} disabled={isLoading}>
                                     {isLoadingRESTART ? 'Подождите...' : 'Перезагрузить'}
                                 </Button>
                             </Form>

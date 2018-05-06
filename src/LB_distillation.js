@@ -1,5 +1,18 @@
 import React from 'react';
-import {Col, Thumbnail, Table, FormGroup, FormControl, Form, Tab, Button, Glyphicon, ListGroup, ListGroupItem, Badge} from 'react-bootstrap';
+import {
+    Col,
+    Thumbnail,
+    Table,
+    FormGroup,
+    FormControl,
+    Form,
+    Tab,
+    Button,
+    Glyphicon,
+    ListGroup,
+    ListGroupItem,
+    Badge
+} from 'react-bootstrap';
 import {handleChange, getValidationState100Bool, getValidationState100, getJson, sendRequest} from './util'
 
 class Distillation extends React.Component {
@@ -10,9 +23,9 @@ class Distillation extends React.Component {
         this.getValidationState100 = getValidationState100.bind(this);
         this.sendRequest = sendRequest.bind(this);
         this.getJson = getJson.bind(this);
-        this.setTank = this.setTank.bind(this);
         this.tickStart = this.tickStart.bind(this);
         this.tickStop = this.tickStop.bind(this);
+        this.setTank = this.setTank.bind(this);
         this.state = {
             isLoading: false,
             tempWater: '',
@@ -22,14 +35,13 @@ class Distillation extends React.Component {
             value: '',
             settingAlarmDistillation: false
         };
+        this.tickUrl = '/distillation.json';
+        this.setUrl = '/SetTempTank?SettingTank=' + this.state.value;
     }
 
-    setTank() {
-        this.sendRequest("/SetTempTank?SettingTank=" + this.state.value);
-    }
     tickStart() {
         this.interval = setInterval(
-            () => this.getJson("/distillation.json", 0),
+            () => this.getJson(this.tickUrl, 0),
             1000
         );
     }
@@ -38,28 +50,37 @@ class Distillation extends React.Component {
         clearInterval(this.interval);
     }
 
+    setTank() {
+        this.sendRequest(this.setUrl);
+    }
+
     render() {
         const {
-            tempWater,
-            tempTakeOff,
-            tempTank,
-            settingTank,
-            value,
-            settingAlarmDistillation,
-            isLoading
-        } = this.state;
-        const isvalid = this.getValidationState100Bool(value);
+                tempWater,
+                tempTakeOff,
+                tempTank,
+                settingTank,
+                value,
+                settingAlarmDistillation,
+                isLoading
+            } = this.state,
+            isvalid = this.getValidationState100Bool(value);
         return (
             <Tab.Pane eventKey="distillation" onEnter={this.tickStart} onExit={this.tickStop}>
                 <p></p>
-
                 <Col md={3}>
                     <Thumbnail src="/LB_distillator.png">
                         <ListGroup>
                             <ListGroupItem>Подключите датчики согласно рисунка</ListGroupItem>
-                            <ListGroupItem><small>3 - <Badge>{tempWater}&#176;</Badge> воды на выходе из дефлегматора</small></ListGroupItem>
-                            <ListGroupItem><small>2 - <Badge>{tempTakeOff}&#176;</Badge> в узле отбора</small></ListGroupItem>
-                            <ListGroupItem bsStyle = {settingAlarmDistillation ? 'danger' : 'success'}><small>1 - <Badge>{tempTank}&#176;</Badge> в кубе</small></ListGroupItem>
+                            <ListGroupItem>
+                                <small>3 - <Badge>{tempWater}&#176;</Badge> воды на выходе из дефлегматора</small>
+                            </ListGroupItem>
+                            <ListGroupItem>
+                                <small>2 - <Badge>{tempTakeOff}&#176;</Badge> в узле отбора</small>
+                            </ListGroupItem>
+                            <ListGroupItem bsStyle={settingAlarmDistillation ? 'danger' : 'success'}>
+                                <small>1 - <Badge>{tempTank}&#176;</Badge> в кубе</small>
+                            </ListGroupItem>
                         </ListGroup>
                     </Thumbnail>
                 </Col>
@@ -90,19 +111,9 @@ class Distillation extends React.Component {
                             <td>
                                 <Form inline>
                                     <FormGroup validationState={this.getValidationState100(value)}>
-                                        <FormControl
-                                            type="number"
-                                            value={value}
-                                            name='value'
-                                            placeholder="число от 1 до 100"
-                                            onChange={this.handleChange}
-                                        />
+                                        <FormControl type="number" value={value} name='value' placeholder="число от 1 до 100" onChange={this.handleChange}/>
                                     </FormGroup>{' '}
-                                    <Button
-                                        bsStyle="primary"
-                                        onClick={this.setTank}
-                                        disabled={isLoading || !isvalid}
-                                    >
+                                    <Button bsStyle="primary" onClick={this.setTank} disabled={isLoading || !isvalid}>
                                         {isLoading ? 'Подождите...' : <Glyphicon glyph="save"/>}
                                     </Button>
                                 </Form>

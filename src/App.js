@@ -18,7 +18,7 @@ class App extends React.Component {
                 console.log('App offline');
                 this.online = false;
             },
-            5000
+            3000
         );
     }
 

@@ -1,6 +1,12 @@
 import React from 'react';
-import {Button, Form, ControlLabel, FormGroup, Tab, FormControl, Table} from 'react-bootstrap';
-import {handleChange, getValidationState100Bool, getValidationState100, getJson, sendRequest} from './util'
+import {Button, Form, ControlLabel, FormGroup, Tab, FormControl, Table, Col} from 'react-bootstrap';
+import {
+    handleChange,
+    getValidationState100Bool,
+    getValidationState100,
+    getJson,
+    sendRequest
+} from './util'
 class Heater extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -9,27 +15,20 @@ class Heater extends React.Component {
         this.getValidationState100Bool = getValidationState100Bool.bind(this);
         this.getValidationState100 = getValidationState100.bind(this);
         this.getJson = getJson.bind(this);
-        this.setHeater = this.setHeater.bind(this);
         this.tickStart = this.tickStart.bind(this);
         this.tickStop = this.tickStop.bind(this);
+        this.setHeater = this.setHeater.bind(this);
         this.state = {
             isLoading: false,
             value: ''
         };
-    }
-
-    setHeater() {
-        this.sendRequest("/SetHeaterPower?heaterPower=" + this.state.value);
-    }
-
-    componentDidMount() {
-        // this.getJson("/heater.json")
-        this.tickStart()
+        this.tickUrl = '/heater.json';
+        this.setUrl = "/SetHeaterPower?heaterPower=" + this.state.value;
     }
 
     tickStart() {
         this.interval = setInterval(
-            () => this.getJson("/heater.json", 0),
+            () => this.getJson(this.tickUrl, 0),
             1000
         );
     }
@@ -38,9 +37,17 @@ class Heater extends React.Component {
         clearInterval(this.interval);
     }
 
+    setHeater() {
+        this.sendRequest(this.setUrl);
+    }
+
+    componentDidMount() {
+        this.tickStart()
+    }
+
     render() {
-        const {value, isLoading} = this.state;
-        const isvalid = this.getValidationState100Bool(value);
+        const {value, isLoading} = this.state,
+            isvalid = this.getValidationState100Bool(value);
         return (
             <Tab.Pane eventKey="heater" onEnter={this.tickStart} onExit={this.tickStop}>
                 <p></p>
@@ -51,19 +58,9 @@ class Heater extends React.Component {
                             <Form inline>
                                 <FormGroup validationState={this.getValidationState100(value)}>
                                     <ControlLabel>Мощность ТЭНа</ControlLabel>{' '}
-                                    <FormControl
-                                        type="number"
-                                        value={value}
-                                        name='value'
-                                        placeholder="число от 1 до 100"
-                                        onChange={this.handleChange}
-                                    />
+                                    <FormControl type="number" value={value} name='value' placeholder="0" onChange={this.handleChange}/>
                                 </FormGroup>{' '}
-                                <Button
-                                    bsStyle="primary"
-                                    onClick={this.setHeater}
-                                    disabled={isLoading || !isvalid}
-                                >
+                                <Button bsStyle="primary" onClick={this.setHeater} disabled={isLoading || !isvalid}>
                                     {isLoading ? 'Подождите...' : 'Задать'}
                                 </Button>
                             </Form>
