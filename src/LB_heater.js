@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Form, ControlLabel, FormGroup, Tab, FormControl, Table, Col} from 'react-bootstrap';
+import {Button, Form, ControlLabel, FormGroup, Tab, FormControl, Table, PageHeader} from 'react-bootstrap';
 import {
     handleChange,
     getValidationState100Bool,
@@ -50,7 +50,9 @@ class Heater extends React.Component {
             isvalid = this.getValidationState100Bool(value);
         return (
             <Tab.Pane eventKey="heater" onEnter={this.tickStart} onExit={this.tickStop}>
-                <p></p>
+                <PageHeader>
+                    Мощность ТЭНа <small></small>
+                </PageHeader>
                 <Table hover>
                     <tbody>
                     <tr>

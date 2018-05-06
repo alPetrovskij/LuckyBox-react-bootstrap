@@ -9,7 +9,8 @@ import {
     InputGroup,
     Tab,
     ListGroup,
-    ListGroupItem
+    ListGroupItem,
+    PageHeader
 } from 'react-bootstrap';
 import {
     handleChange,
@@ -118,7 +119,7 @@ class Brewing extends React.Component {
             && this.getValidationState100Bool(pauseTemp4);
         return (
             <Tab.Pane eventKey="brewing" onEnter={this.tickStart} onExit={this.tickStop}>
-                <p></p>
+                <PageHeader>Затирание</PageHeader>
                 <Col md={3}>
                     <Thumbnail src="/LB_brewing.png">
                         <ListGroup>

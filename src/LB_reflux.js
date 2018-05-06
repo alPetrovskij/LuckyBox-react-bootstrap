@@ -11,7 +11,8 @@ import {
     Glyphicon,
     ListGroup,
     ListGroupItem,
-    Badge
+    Badge,
+    PageHeader
 } from 'react-bootstrap';
 import {handleChange, getValidationState100Bool, getValidationState100, getJson, sendRequest} from './util'
 
@@ -73,7 +74,7 @@ class Reflux extends React.Component {
             isvalid = this.getValidationState100Bool(value);
         return (
             <Tab.Pane eventKey="reflux" onEnter={this.tickStart} onExit={this.tickStop}>
-                <p></p>
+                <PageHeader>РК</PageHeader>
                 <Col md={3}>
                     <Thumbnail src="/LB_reflux.png">
                         <ListGroup>
@@ -120,7 +121,7 @@ class Reflux extends React.Component {
                             <td>
                                 <Form inline>
                                     <FormGroup validationState={this.getValidationState100(value)}>
-                                        <FormControl type="number" value={value} name='value' placeholder="число от 1 до 100" onChange={this.handleChange}/>
+                                        <FormControl type="number" value={value} name='value' placeholder="0" onChange={this.handleChange}/>
                                     </FormGroup>{' '}
                                     <Button bsStyle="primary" onClick={this.setReflux} disabled={isLoading || !isvalid}>
                                         {isLoading ? 'Подождите...' : <Glyphicon glyph="save"/>}

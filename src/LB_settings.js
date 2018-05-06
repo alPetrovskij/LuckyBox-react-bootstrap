@@ -1,5 +1,5 @@
 import React from 'react';
-import {FormGroup, FormControl, Button, Form, Table, Alert, Tab} from 'react-bootstrap';
+import {FormGroup, FormControl, Button, Form, Table, Alert, Tab, PageHeader} from 'react-bootstrap';
 import {handleChange, getJson, getValidationState, sendRequest} from './util'
 
 class Settings extends React.Component {
@@ -128,7 +128,7 @@ class Settings extends React.Component {
         }
         return (
             <Tab.Pane eventKey="settings" onEnter={this.tickStart} onExit={this.tickStop}>
-                <p></p>
+                <PageHeader>Настройки</PageHeader>
                 <Table hover>
                     <tbody>
                     <tr>
@@ -144,9 +144,20 @@ class Settings extends React.Component {
                     <tr>
                         <td>Загрузить прошивку (bin)</td>
                         <td>
-                            <Form inline method="POST" action="/update">
+                            <Form inline method="POST" action="/update?cmd=0">
                                 <FormGroup>
-                                    <FormControl type="file" name='file' onChange={this.handleChange}/>
+                                    <FormControl type="file" name='update' onChange={this.handleChange}/>
+                                </FormGroup>{' '}
+                                <Button type="submit" bsStyle="primary" disabled={isLoading}>Загрузить</Button>
+                            </Form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Загрузить (WEBсервер)</td>
+                        <td>
+                            <Form inline method="POST" action="/update?cmd=100">
+                                <FormGroup>
+                                    <FormControl type="file" name='update' onChange={this.handleChange}/>
                                 </FormGroup>{' '}
                                 <Button type="submit" bsStyle="primary" disabled={isLoading}>Загрузить</Button>
                             </Form>
