@@ -71,29 +71,31 @@ class Distillation extends React.Component {
                         <div className="svg">
                             <svg width="160" height="300">
                                 <style>
-                                    { '.svg{text-align:center;}.a{fill:none;stroke-width:2;stroke:#000;}.b{fill:none;stroke:#000;}.c{fill:#fff;stroke-width:2;stroke:#000;}.d{text-align:end;text-anchor:end;}.r{fill:'}{settingAlarmDistillation ? 'red' : 'none'}{';stroke-width:2;stroke:#000;}' }
+                                    { '.svg{text-align:center;}.a{fill:#fff;stroke:#000;}.b1{fill:red;stroke-width:2;stroke:#000;}.c{fill:none;stroke-width:2;stroke:#000;}.d{fill:#33c3ff;stroke-width:2;stroke:#000;}.e{text-align:end;text-anchor:end;}.f{fill:none;stroke:#000}.r1{fill:'}{settingAlarmDistillation ? 'red' : 'none'}{';stroke-width:2;stroke:#000;}' }
                                 </style>
                                 <g transform="translate(0 -752)">
-                                    <path d="M42 925v5s-32 7-32 18v93c0 2 2 4 4 4h71c2 0 4-2 4-4v-43h6v-4h-6v-46c0-12-32-18-32-18v-5z" className="r"/>
-                                    <path d="M42 808v11c-13 0-23 4-23 14v44c2 5 2 16 2 16h3s-1-11 1-16v-42c0-10 17-8 17-8v11h15v-13h7v-4h-7v-13z" className="a"/>
-                                    <path d="M50 761c-5 0-8 4-8 8v35h15v-22l1-1-1-12c0-4-3-8-7-8z" className="b"/>
-                                    <rect ry="2" rx="2" y="788" x="37" height="4" width="24" className="c"/>
-                                    <rect width="24" height="4" x="37" y="779" rx="2" ry="2" className="c"/>
-                                    <rect ry="2" rx="2" y="797" x="37" height="4" width="41" className="c"/>
-                                    <rect ry="2" rx="2" y="771" x="37" height="4" width="24" className="c"/>
-                                    <ellipse cx="72" cy="773" rx="6" ry="6" className="b"/>
-                                    <ellipse ry="6" rx="6" cy="996" cx="104" className="b"/>
-                                    <ellipse cx="72" cy="823" rx="6" ry="6" className="b"/>
-                                    <path d="M76 777l16 10h66" className="b"/>
-                                    <path d="M109 1000l13 10h36" className="b"/>
-                                    <path d="M76 827l16 11h66" className="b"/>
-                                    <path d="M42 842v80h15v-80z" className="a"/>
-                                    <text x="69" y="777" font-size="10" className="e">3</text>
-                                    <text x="69" y="827" font-size="10" className="e">2</text>
-                                    <text y="1000" x="101" font-size="10" className="e">1</text>
-                                    <text y="782" x="160" font-size="20" className="d">{tempWater}</text>
-                                    <text y="833" x="160" font-size="20" className="d">{tempTakeOff}</text>
-                                    <text x="160" y="1005" font-size="20" className="d">{tempTank}</text>
+                                    <path d="M62 823c32 30 67 11 96 14M62 779c23 30 67 10 96 13M93 1000c11 18 38 5 67 8M92 1033c11 17 39 6 68 9" className="f"/>
+                                    <path d="M42 925v5s-32 7-32 18v93c0 2 2 4 4 4h71c2 0 4-2 4-4v-38h4v-4h-4v-51c0-12-32-18-32-18v-5z" className="r1"/>
+                                    <path d="M42 808v11c-13 0-23 4-23 14v44c2 5 2 16 2 16h2s0-11 2-16v-42c0-10 17-8 17-8v11h15v-13h5v-4h-5v-13zM50 765c-7 5-8 6-8 10v29h15v-29c0-4 0-5-7-10z" className="c"/>
+                                    <rect ry="2" rx="2" y="796" x="38" height="4" width="24" className="d"/>
+                                    <rect ry="2" rx="2" y="779" x="38" height="4" width="32" className="d"/>
+                                    <ellipse cx="107" cy="797" rx="6" ry="6" className="a"/>
+                                    <ellipse cx="107" cy="1042" rx="6" ry="6" className="a"/>
+                                    <circle cy="1008" cx="107" r="6" className="a"/>
+                                    <circle cx="107" cy="840" r="6" className="a"/>
+                                    <rect ry="2" rx="2" y="788" x="38" height="4" width="24" className="d"/>
+                                    <path d="M42 842v80h15v-80z" className="c"/>
+                                    <rect width="24" height="4" x="60" y="1020" rx="2" ry="2" className="b1"/>
+                                    <rect ry="2" rx="2" y="1011" x="60" height="4" width="24" className="b1"/>
+                                    <rect width="37" height="4" x="60" y="1029" rx="2" ry="2" className="b1"/>
+                                    <text x="104" y="801" font-size="10" className="f">4</text>
+                                    <text x="104" y="844" font-size="10"  className="f">3</text>
+                                    <text y="1011" x="104.5" font-size="10"  className="f">2</text>
+                                    <text  font-size="10" x="104" y="1046" className="f">1</text>
+                                    <text y="789" x="160" font-size="20" className="e">{tempWater}</text>
+                                    <text y="833" x="160" font-size="20"  className="e">{tempTakeOff}</text>
+                                    <text x="160" y="1004" font-size="20" className="e">{tempTank}</text>
+                                    <text  font-size="20" y="1039" x="160" className="e">{}</text>
                                 </g>
                             </svg>
                         </div>
