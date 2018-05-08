@@ -28,12 +28,16 @@ class Heater extends React.Component {
 
     tickStart() {
         this.interval = setInterval(
-            () => this.getJson(this.tickUrl, 0),
+            () => {
+                // console.log('heater tickStart');
+                this.getJson(this.tickUrl, 0)
+            },
             1000
         );
     }
 
     tickStop() {
+        // console.log('heater tickStop');
         clearInterval(this.interval);
     }
 

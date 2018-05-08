@@ -77,32 +77,34 @@ class Reflux extends React.Component {
                         <div className="svg">
                             <svg width="160" height="300">
                                 <style>
-                                    { '.svg{text-align:center;}.h{fill:none;stroke-width:2;stroke:#000;}a{fill:none;stroke:#000;}.b{fill:#fff;stroke-width:2;stroke:#000;}.c{line-height:100%;text-align:end;text-anchor:end;}.r{fill:'}{settingAlarmReflux ? 'red' : 'none'}{';stroke-width:2;stroke:#000;}' }
+                                    { '.r2{fill:'}{settingAlarmReflux ? 'red' : 'none'}{';stroke-width:2;stroke:#000;}.a{fill:none;stroke:#000;}.b{fill:#fff;stroke:#000;}.c{fill:#33c3ff;stroke-width:2;stroke:#000;}.d{text-align:end;text-anchor:end;}.f{fill:red;stroke-width:2;stroke:#000;}.e{fill:#fff;stroke:#000;stroke-width:2;}' }
                                 </style>
                                 <g transform="translate(0 -752)">
-                                    <path d="M42 925v5s-32 7-32 18v93c0 2 2 4 4 4h71c2 0 4-2 4-4v-43h6v-4h-6v-46c0-12-32-18-32-18v-5zM42 808v11c-13 0-23 4-23 14v44c2 5 2 16 2 16h3s-1-11 1-16v-42c0-10 17-8 17-8v11h15v-13h7v-4h-7v-13z" className="h"/>
-                                    <path d="M50 761c-5 0-8 4-8 8v35h15v-22l1-1-1-12c0-4-3-8-7-8z" className="a"/>
-                                    <rect ry="2" rx="2" y="788" x="37" height="4" width="24" className="b"/>
-                                    <rect width="24" height="4" x="37" y="779" rx="2" ry="2" className="b"/>
-                                    <rect ry="2" rx="2" y="797" x="37" height="4" width="41" className="b"/>
-                                    <path d="M42 841v81h15v-59h7v-5h-7v-17z" className="r"/>
-                                    <path d="M76 827l16 11h66" className="a"/>
-                                    <ellipse cx="72" cy="773" rx="6" ry="6" className="a"/>
-                                    <ellipse cx="72" cy="823" rx="6" ry="6" className="a"/>
-                                    <ellipse ry="6" rx="6" cy="860" cx="72" className="a"/>
-                                    <ellipse ry="6" rx="6" cy="996" cx="104" className="a"/>
-                                    <rect ry="2" rx="2" y="771" x="37" height="4" width="24" className="b"/>
-                                    <path d="M76 777l16 10h66" className="a"/>
-                                    <path d="M109 1000l13 10h36" className="a"/>
-                                    <path d="M76 865l16 10h66" className="a"/>
-                                    <text x="74.5" y="777" font-size="10" className="d">4</text>
-                                    <text x="75" y="826.5" font-size="10" className="d">3</text>
-                                    <text x="75" y="863.5" font-size="10" className="d">2</text>
-                                    <text x="106.5" y="1000" font-size="10" className="d">1</text>
-                                    <text y="782" x="160" font-size="20" className="c">{temperature4}</text>
-                                    <text y="833" x="160" font-size="20" className="c">{temperature3}</text>
-                                    <text x="160" y="870" font-size="20" className="c">{temperature2}</text>
-                                    <text x="160" y="1005" font-size="20" className="c">{temperature}</text>
+                                    <path d="M62 823c32 30 67 11 96 14M62 779c23 30 67 10 96 13M93 993c11 18 38 4 67 8M92 1033c11 17 39 6 68 9" className="a"/>
+                                    <path d="M42 925v5s-32 7-32 18v93c0 2 2 4 4 4h71c2 0 4-2 4-4v-45h4v-4h-4v-44c0-12-32-18-32-18v-5zM42 808v11c-13 0-23 4-23 14v44c2 5 2 16 2 16h2s0-11 2-16v-42c0-10 17-8 17-8v11h15v-13h5v-4h-5v-13zM50 765c-7 5-8 6-8 10v29h15v-29c0-4 0-5-7-10z" className="e"/>
+                                    <path d="M42 841v81h15v-54h5v-4h-5v-23z" className="r2"/>
+                                    <path d="M62 866c32 30 67 11 96 14" className="a"/>
+                                    <rect x="38" y="796" width="24" height="4" rx="2" ry="2" className="c"/>
+                                    <rect x="38" y="779" width="32" height="4" rx="2" ry="2" className="c"/>
+                                    <rect y="788" x="38" width="24" height="4" ry="2" rx="2" className="c"/>
+                                    <rect x="60" y="1020" width="24" height="4" rx="2" ry="2" className="f"/>
+                                    <rect x="60" y="1011" width="24" height="4" rx="2" ry="2" className="f"/>
+                                    <rect x="60" y="1029" width="37" height="4" rx="2" ry="2" className="f"/>
+                                    <circle cx="107" cy="797" r="6" className="b"/>
+                                    <circle cx="107" cy="1042" r="6" className="b"/>
+                                    <circle cx="107" cy="1001" r="6" className="b"/>
+                                    <circle cx="107" cy="883" r="6" className="b"/>
+                                    <circle cx="107" cy="840" r="6" className="b"/>
+                                    <text x="160" y="789" fontSize="20" className="d">{temperature}</text>
+                                    <text x="160" y="833" fontSize="20" className="d">{temperature}</text>
+                                    <text x="160" y="876" fontSize="20" className="d">{temperature}</text>
+                                    <text x="160" y="997" fontSize="20" className="d">{temperature}</text>
+                                    <text x="160" y="1039" fontSize="20" className="d">{}</text>
+                                    <text x="103" y="801" fontSize="10">5</text>
+                                    <text x="104" y="844" fontSize="10">4</text>
+                                    <text x="104" y="887" fontSize="10">3</text>
+                                    <text x="104" y="1005" fontSize="10">2</text>
+                                    <text x="104" y="1046" fontSize="10">1</text>
                                 </g>
                             </svg>
                         </div>

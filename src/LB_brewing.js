@@ -62,9 +62,13 @@ class Brewing extends React.Component {
             "&pauseTime3=" + this.state.pauseTime3 + "&pauseTime4=" + this.state.pauseTime4;
     }
 
+    componentDidMount() {
+        this.getJson(this.tickUrl, 1)
+    }
+
     tickStart() {
         this.interval = setInterval(
-            () => this.getJson(this.tickUrl, 1),
+            () => this.getJson(this.tickUrl, 0),
             1000
         );
     }

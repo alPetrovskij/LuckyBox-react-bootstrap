@@ -59,12 +59,8 @@ export function getJson(url, arg) {
     fetch(url)
         .then((response) => {
             if (response.ok) {
-                App.restarttickOnline();
-                if(arg === 1){
-                    this.interval = setInterval(
-                        () => this.getJson(url, 2),
-                        1000
-                    );
+                if(arg === 0) {
+                    App.restarttickOnline();
                 }
             } else{
                 // console.log('Network response was not ok.');
@@ -73,7 +69,7 @@ export function getJson(url, arg) {
         .then(res => res.json())
         .then(
             (result) => {
-                if(arg === 2){
+                if(arg === 1){
                     const ss = {
                         time: result.time,
                         stepBrewing: result.stepBrewing
