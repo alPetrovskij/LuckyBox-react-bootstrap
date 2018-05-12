@@ -1,5 +1,5 @@
 import React from 'react';
-import {Tab, PageHeader} from 'react-bootstrap';
+import {Tab} from 'react-bootstrap';
 import Dygraph from 'dygraphs';
 import {getJson} from './util'
 
@@ -53,8 +53,8 @@ class Graphics extends React.Component {
     render() {
         return (
             <Tab.Pane eventKey="graphics" onEnter={this.tickStart} onExit={this.tickStop}>
-                <PageHeader>Графики</PageHeader>
-                <h3>График температуры</h3>
+                <p></p>
+                {/*<h3>График температуры</h3>*/}
                 <div id="div_g"></div>
             </Tab.Pane>
         );

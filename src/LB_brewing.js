@@ -1,17 +1,15 @@
 import React from 'react';
+import App from './App';
 import {
     Col,
     Thumbnail,
     Table,
     FormGroup,
     FormControl,
-    Button,
     InputGroup,
-    Tab,
-    ListGroup,
-    ListGroupItem,
-    PageHeader
+    Tab
 } from 'react-bootstrap';
+import Button from 'react-bootstrap-button-loader';
 import {
     handleChange,
     getValidationState100,
@@ -52,7 +50,8 @@ class Brewing extends React.Component {
             statusPause1: false,
             statusPause2: false,
             statusPause3: false,
-            statusPause4: false
+            statusPause4: false,
+            temperature: ''
         };
         this.tickUrl = '/brewing.json';
         this.setUrl = "/SettingBrewing?startBrewing=" + this.state.startBrewing + "&stepBrewing=" + this.state.stepBrewing +
@@ -96,22 +95,23 @@ class Brewing extends React.Component {
 
     render() {
         const {
-                isLoading,
-                pauseTime1,
-                pauseTemp1,
-                pauseTime2,
-                pauseTemp2,
-                pauseTime3,
-                pauseTemp3,
-                pauseTime4,
-                pauseTemp4,
-                statusPause1,
-                statusPause2,
-                statusPause3,
-                statusPause4,
-                time
-            } = this.state,
-            activePause = statusPause1 ? '1' : statusPause2 ? '2' : statusPause3 ? '3' : statusPause4 ? '4' : 'нажите старт для начала работы';
+            isLoading,
+            pauseTime1,
+            pauseTemp1,
+            pauseTime2,
+            pauseTemp2,
+            pauseTime3,
+            pauseTemp3,
+            pauseTime4,
+            pauseTemp4,
+            statusPause1,
+            statusPause2,
+            statusPause3,
+            statusPause4,
+            time,
+            temperature
+        } = this.state,
+            activePause = statusPause1 ? '1' : statusPause2 ? '2' : statusPause3 ? '3' : statusPause4 ? '4' : 'n/a';
 
         const isvalid = this.getValidationStateTPauseBool(pauseTime1)
             && this.getValidationStateTPauseBool(pauseTime2)
@@ -123,24 +123,36 @@ class Brewing extends React.Component {
             && this.getValidationState100Bool(pauseTemp4);
         return (
             <Tab.Pane eventKey="brewing" onEnter={this.tickStart} onExit={this.tickStop}>
-                <PageHeader>Затирание</PageHeader>
-                <Col md={3}>
-                    <Thumbnail src="/LB_brewing.png">
-                        <ListGroup>
-                            <ListGroupItem>Подключите датчики согласно рисунка</ListGroupItem>
-                            <ListGroupItem>
-                                <small>Подключите насос и отрегулируйте подачу сусла</small>
-                            </ListGroupItem>
-                            <ListGroupItem>
-                                <small>Т1, температура в заторе</small>
-                            </ListGroupItem>
-                            <ListGroupItem>
-                                <small>Пауза: {activePause}</small>
-                            </ListGroupItem>
-                        </ListGroup>
+                <p></p>
+                <Col smOffset={3} sm={6} mdOffset={0} md={4}>
+                    <Thumbnail>
+                        <div className="svg">
+                            <svg width="80%" height="80%" viewBox="0 0 170 200">
+                                <style>
+                                    {'.svg{text-align:center;}.o{fill:none;stroke:'}{ App.online ? 'green' : 'black'}{';stroke-width:2;}.a{fill:none;stroke:#000;}.b{fill:#fff;stroke:#000;}.c{fill:#33c3ff;stroke-width:2;stroke:#000;}.d{text-align:end;text-anchor:end;}.f{fill:red;stroke-width:2;stroke:#000;}.e{fill:#fff;stroke:#000;stroke-width:2;}'}
+                                </style>
+                                <path d="M23 47h65" className="e"/>
+                                <g transform="translate(6 -852)">
+                                    <path d="M93 993c11 18 38 4 67 8" className="a"/>
+                                    <path d="M93 886.5c11 18 38 4 67 8" className="a"/>
+                                    <path d="M-1.84 864.37c0 2.83.45 147.27.7 161.1.2 11.02 10.98 3.19 10.98 8.7v6.83c0 2 2.16 4 4.16 4h71c2 0 4-2 4-4v-45h4v-4h-4v-83.4c0-6.83-10.22-6.56-10.22-6.56l-.43 105.5h-58.4v-105.5s-10.11-.17-10.11 6.56v114.7c0 5.52-6.8 4.62-6.79.21-.25-12.9-.39-144.52-.4-154.47l6.12 6.12A11.69 11.69 0 0 0 24.9 891.3l11.5 11.49c.78.78 1.25 29.21 1.25 29.21h2.69s.33-31.93-.45-32.7l-11.5-11.5a11.69 11.69 0 0 0-16.13-16.14l-10.14-9.9c-2.44-1.25-4.03.16-3.96 2.61z" className="e"/>
+                                    <rect x="60" y="1025" width="24" height="4" rx="2" ry="2" className="f"/>
+                                    <rect x="60" y="1016" width="24" height="4" ry="2" rx="2" className="f"/>
+                                    <rect width="37" height="4" x="60" y="1034" rx="2" ry="2" className="f"/>
+                                    <circle cy="1001" cx="107" r="6" className="b"/>
+                                    <circle cx="107" cy="895" r="6" className="b"/>
+                                    <text x="160" y="890" fontSize="20" className="d">{activePause ? activePause : 'n/a'}</text>
+                                    <text x="160" y="997" fontSize="20" className="d">{temperature ? temperature : 'n/a'}&#176;</text>
+                                    <text x="104" y="899" fontSize="10">P</text>
+                                    <text x="104" y="1005" fontSize="10">1</text>
+                                </g>
+                                <text x="19" y="35" fontSize="15">M</text>
+                                <path d="M100.1 23.6a6.5 6.5 0 0 1 2.84 5.36 6.46 6.46 0 1 1-10.07-5.36M96.48 21.01V29" className="o"/>
+                            </svg>
+                        </div>
                     </Thumbnail>
                 </Col>
-                <Col md={9}>
+                <Col sm={12} md={8}>
                     <FormGroup>
                         <InputGroup>
                             <FormControl type="text" value={time} readOnly/>
@@ -154,8 +166,8 @@ class Brewing extends React.Component {
                         <thead>
                         <tr>
                             <th>Пауза</th>
-                            <th className="col-sm-3 col-md-5">Время паузы</th>
-                            <th className="col-sm-3 col-md-5">&#176; паузы</th>
+                            <th>Время паузы</th>
+                            <th>&#176; паузы</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -237,8 +249,8 @@ class Brewing extends React.Component {
                         </tr>
                         <tr>
                             <td colSpan="3">
-                                <Button bsStyle="primary" onClick={this.setBrew} disabled={isLoading || !isvalid}>
-                                    {isLoading ? 'Подождите...' : 'Задать'}
+                                <Button bsStyle="primary" loading={isLoading} onClick={this.setBrew} disabled={isLoading || !isvalid}>
+                                    Задать
                                 </Button>
                             </td>
                         </tr>

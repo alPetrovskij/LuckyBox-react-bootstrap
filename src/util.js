@@ -107,7 +107,7 @@ export function getJson(url, arg) {
         )
 }
 
-export function sendRequest(url) {
+export function sendRequest(url, arg) {
     this.setState({isLoading: true});
     const opt = {method: 'get'};
     fetch(url, opt)
@@ -116,7 +116,8 @@ export function sendRequest(url) {
                 console.log('res.ok');
                 setTimeout(() => {
                     this.setState({
-                        isLoading: false
+                        isLoading: false,
+                        [arg]: false
                     });
                 }, 1000);
             }

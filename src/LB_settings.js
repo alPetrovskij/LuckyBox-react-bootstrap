@@ -1,5 +1,6 @@
 import React from 'react';
-import {FormGroup, FormControl, Button, Form, Table, Alert, Tab, PageHeader} from 'react-bootstrap';
+import {FormGroup, FormControl, Form, Table, Alert, Tab, InputGroup} from 'react-bootstrap';
+import Button from 'react-bootstrap-button-loader';
 import {handleChange, getJson, getValidationState, sendRequest} from './util'
 
 class Settings extends React.Component {
@@ -9,6 +10,7 @@ class Settings extends React.Component {
         this.sendRequest = sendRequest.bind(this);
         this.getJson = getJson.bind(this);
         this.getValidationState = getValidationState.bind(this);
+        this.setLoadingT = this.setLoadingT.bind(this);
         this.setSSDP = this.setSSDP.bind(this);
         this.setSSID = this.setSSID.bind(this);
         this.setSSIDAP = this.setSSIDAP.bind(this);
@@ -50,6 +52,10 @@ class Settings extends React.Component {
         );
     }
 
+    setLoadingT() {
+        this.setState({isLoadingBIN: true});
+    }
+
     tickStop() {
         clearInterval(this.interval);
     }
@@ -63,37 +69,43 @@ class Settings extends React.Component {
     }
 
     setSSDP() {
-        this.sendRequest(this.setUrlSSDP);
+        this.setState({isLoadingSSDP: true});
+        this.sendRequest(this.setUrlSSDP, 'isLoadingSSDP');
     }
 
     setSSID() {
-        this.sendRequest(this.setUrlSSID);
+        this.setState({isLoadingSSID: true});
+        this.sendRequest(this.setUrlSSID, 'isLoadingSSID');
         alert("Изменения вступят в силу после перезагрузки. Пожалуйста перезагрузите устройство.");
     }
 
     setSSIDAP() {
-        this.sendRequest(this.setUrlSSIDAP);
+        this.setState({isLoadingSSIDAP: true});
+        this.sendRequest(this.setUrlSSIDAP, 'isLoadingSSIDAP');
         alert("Изменения вступят в силу после перезагрузки. Пожалуйста перезагрузите устройство.");
     }
 
     setTIMEZONE() {
-        this.sendRequest(this.setUrlTIMEZONE);
+        this.setState({isLoadingTIMEZONE: true});
+        this.sendRequest(this.setUrlTIMEZONE, 'isLoadingTIMEZONE');
     }
 
     setAUTOTIMEZONE() {
+        this.setState({isLoadingAUTOTIMEZONE: true});
         const set_date = new Date();
         const gmtHours = -set_date.getTimezoneOffset() / 60;
         this.setState({timezone: gmtHours});
-        this.sendRequest(this.setUrlTIMEZONE);
+        this.sendRequest(this.setUrlTIMEZONE, 'isLoadingAUTOTIMEZONE');
     }
 
     restart() {
+        this.setState({isLoadingRESTART: true});
         this.handleDismiss();
-        this.sendRequest(this.setUrlRESTART);
+        this.sendRequest(this.setUrlRESTART, 'isLoadingRESTART');
     }
 
     render() {
-        const {
+        var {
                 isLoading,
                 isLoadingSSDP,
                 isLoadingSSID,
@@ -128,19 +140,19 @@ class Settings extends React.Component {
         }
         return (
             <Tab.Pane eventKey="settings" onEnter={this.tickStart} onExit={this.tickStop}>
-                <PageHeader>Настройки</PageHeader>
+                <p></p>
                 <Table hover>
                     <tbody>
-                    <tr>
-                        <td>Обновление</td>
-                        <td>
-                            <Form inline>
-                                <Button href="/edit" bsStyle="primary" bsSize="small" disabled={isLoading}>
-                                    Открыть редактор HTML
-                                </Button>
-                            </Form>
-                        </td>
-                    </tr>
+                    {/*<tr>*/}
+                        {/*<td>Обновление</td>*/}
+                        {/*<td>*/}
+                            {/*<Form inline>*/}
+                                {/*<Button href="/edit" bsStyle="primary" bsSize="small" disabled={isLoading}>*/}
+                                    {/*Открыть редактор HTML*/}
+                                {/*</Button>*/}
+                            {/*</Form>*/}
+                        {/*</td>*/}
+                    {/*</tr>*/}
                     <tr>
                         <td>Загрузить прошивку (bin)</td>
                         <td>
@@ -170,8 +182,8 @@ class Settings extends React.Component {
                                 <FormGroup validationState={this.getValidationState(ssdp, 'name')}>
                                     <FormControl type="text" value={ssdp} placeholder="Имя устройства" name='ssdp' onChange={this.handleChange}/>
                                 </FormGroup>{' '}
-                                <Button bsStyle="primary" onClick={!isLoading ? this.setSSDP : null} disabled={isLoading || !isvalidSSDP}>
-                                    {isLoadingSSDP ? 'Подождите...' : 'Сохранить'}
+                                <Button loading={isLoadingSSDP} bsStyle="primary" onClick={!isLoading ? this.setSSDP : null} disabled={isLoading || !isvalidSSDP}>
+                                    Сохранить
                                 </Button>
                             </Form>
                         </td>
@@ -186,8 +198,8 @@ class Settings extends React.Component {
                                 <FormGroup validationState={this.getValidationState(password, 'password')}>
                                     <FormControl type="text" value={password} placeholder="Пароль" name='password' onChange={this.handleChange}/>
                                 </FormGroup>{' '}
-                                <Button bsStyle="primary" onClick={!isLoading ? this.setSSID : null} disabled={isLoading || !isvalidSSID}>
-                                    {isLoadingSSID ? 'Подождите...' : 'Сохранить'}
+                                <Button loading={isLoadingSSID} bsStyle="primary" onClick={!isLoading ? this.setSSID : null} disabled={isLoading || !isvalidSSID}>
+                                    Сохранить
                                 </Button>
                             </Form>
                         </td>
@@ -202,8 +214,8 @@ class Settings extends React.Component {
                                 <FormGroup validationState={this.getValidationState(passwordAP, 'password')}>
                                     <FormControl type="text" value={passwordAP} placeholder="Пароль" name='passwordAP' onChange={this.handleChange}/>
                                 </FormGroup>{' '}
-                                <Button bsStyle="primary" onClick={!isLoading ? this.setSSIDAP : null} disabled={isLoading || !isvalidSSIDAP}>
-                                    {isLoadingSSIDAP ? 'Подождите...' : 'Сохранить'}
+                                <Button loading={isLoadingSSIDAP} bsStyle="primary" onClick={!isLoading ? this.setSSIDAP : null} disabled={isLoading || !isvalidSSIDAP}>
+                                    Сохранить
                                 </Button>
                             </Form>
                         </td>
@@ -215,12 +227,13 @@ class Settings extends React.Component {
                                 <FormGroup validationState={this.getValidationState(timezone, 'timez')}>
                                     <FormControl type="text" value={timezone} placeholder="Часовой пояс" name='timezone' onChange={this.handleChange}/>
                                 </FormGroup>{' '}
-                                <Button bsStyle="primary" onClick={!isLoading ? this.setTIMEZONE : null} disabled={isLoading || !isvalidTIMEZONE}>
-                                    {isLoadingTIMEZONE ? 'Подождите...' : 'Сохранить'}
-                                </Button>{' '}
-                                <Button bsStyle="primary" onClick={!isLoading ? this.setAUTOTIMEZONE : null} disabled={isLoading}>
-                                    {isLoadingAUTOTIMEZONE ? 'Подождите...' : 'Авто определение и сохранение зоны'}
-                                </Button>
+                                <FormGroup>
+                                    <InputGroup.Button>
+                                        <Button bsStyle="primary" onClick={!isLoading ? this.setTIMEZONE : null} disabled={isLoading || !isvalidTIMEZONE} loading={isLoadingTIMEZONE}>Сохранить</Button>
+                                        <Button bsStyle="primary" onClick={!isLoading ? this.setAUTOTIMEZONE : null}  disabled={isLoading} loading={isLoadingAUTOTIMEZONE}>Авто
+                                            определение и сохранение зоны</Button>
+                                    </InputGroup.Button>
+                                </FormGroup>
                             </Form>
                         </td>
                     </tr>
@@ -228,8 +241,8 @@ class Settings extends React.Component {
                         <td>Перезагрузка устройства</td>
                         <td>
                             <Form inline>
-                                <Button bsStyle="danger" onClick={!isLoading ? this.handleShow : null} disabled={isLoading}>
-                                    {isLoadingRESTART ? 'Подождите...' : 'Перезагрузить'}
+                                <Button bsStyle="danger" onClick={!isLoading ? this.handleShow : null} disabled={isLoading} loading={isLoadingRESTART}>
+                                 Перезагрузить
                                 </Button>
                             </Form>
                         </td>

@@ -1,5 +1,6 @@
 import React from 'react';
-import {Button, Form, ControlLabel, FormGroup, Tab, FormControl, Table, PageHeader} from 'react-bootstrap';
+import {Form, ControlLabel, FormGroup, Tab, FormControl, Table} from 'react-bootstrap';
+import Button from 'react-bootstrap-button-loader';
 import {
     handleChange,
     getValidationState100Bool,
@@ -7,6 +8,7 @@ import {
     getJson,
     sendRequest
 } from './util'
+
 class Heater extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -20,16 +22,15 @@ class Heater extends React.Component {
         this.setHeater = this.setHeater.bind(this);
         this.state = {
             isLoading: false,
-            value: ''
+            valueHeater: ''
         };
         this.tickUrl = '/heater.json';
-        this.setUrl = "/SetHeaterPower?heaterPower=" + this.state.value;
+        this.setUrl = "/SetHeaterPower?heaterPower=" + this.state.valueHeater + "&heaterStatus=1";
     }
 
     tickStart() {
         this.interval = setInterval(
             () => {
-                // console.log('heater tickStart');
                 this.getJson(this.tickUrl, 0)
             },
             1000
@@ -37,7 +38,6 @@ class Heater extends React.Component {
     }
 
     tickStop() {
-        // console.log('heater tickStop');
         clearInterval(this.interval);
     }
 
@@ -50,24 +50,22 @@ class Heater extends React.Component {
     }
 
     render() {
-        const {value, isLoading} = this.state,
-            isvalid = this.getValidationState100Bool(value);
+        const {valueHeater, isLoading} = this.state,
+            isvalid = this.getValidationState100Bool(valueHeater);
         return (
             <Tab.Pane eventKey="heater" onEnter={this.tickStart} onExit={this.tickStop}>
-                <PageHeader>
-                    Мощность ТЭНа <small></small>
-                </PageHeader>
+                <p></p>
                 <Table hover>
                     <tbody>
                     <tr>
                         <td>
                             <Form inline>
-                                <FormGroup validationState={this.getValidationState100(value)}>
+                                <FormGroup validationState={this.getValidationState100(valueHeater)}>
                                     <ControlLabel>Мощность ТЭНа</ControlLabel>{' '}
-                                    <FormControl type="number" value={value} name='value' placeholder="0" onChange={this.handleChange}/>
+                                    <FormControl type="number" value={valueHeater} name='valueHeater' placeholder="0" onChange={this.handleChange}/>
                                 </FormGroup>{' '}
-                                <Button bsStyle="primary" onClick={this.setHeater} disabled={isLoading || !isvalid}>
-                                    {isLoading ? 'Подождите...' : 'Задать'}
+                                <Button bsStyle="primary" loading={isLoading} onClick={this.setHeater} disabled={isLoading || !isvalid}>
+                                    Задать
                                 </Button>
                             </Form>
                         </td>
