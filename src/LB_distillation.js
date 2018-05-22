@@ -23,42 +23,41 @@ class Distillation extends React.Component {
         this.sendRequest = sendRequest.bind(this);
         this.getJson = getJson.bind(this);
         this.tickStart = this.tickStart.bind(this);
-        this.tickStop = this.tickStop.bind(this);
         this.setTank = this.setTank.bind(this);
         this.state = {
             isLoading: false,
-            tempWater: '',
-            tempTakeOff: '',
-            tempTank: '',
+            temperature3: '',
+            temperature2: '',
+            temperature: '',
             settingTank: '',
             valueDistillation: '',
             settingAlarmDistillation: false,
             valueHeater: ''
         };
         this.tickUrl = '/distillation.json';
-        this.setUrl = '/SetTempTank?SettingTank=' + this.state.valueDistillation;
+        this.setUrl = '/SetTempTank?SettingTank=';
     }
 
     tickStart() {
-        this.interval = setInterval(
-            () => this.getJson(this.tickUrl, 0),
+        clearInterval(App.onlineTick);
+
+        App.onlineTick = setInterval(
+            () => {
+                this.getJson(this.tickUrl, 0, this)
+            },
             1000
         );
     }
 
-    tickStop() {
-        clearInterval(this.interval);
-    }
-
     setTank() {
-        this.sendRequest(this.setUrl);
+        this.sendRequest(this.setUrl + this.state.valueDistillation);
     }
 
     render() {
         const {
-                tempWater,
-                tempTakeOff,
-                tempTank,
+                temperature3,
+                temperature2,
+                temperature,
                 settingTank,
                 valueDistillation,
                 settingAlarmDistillation,
@@ -67,7 +66,7 @@ class Distillation extends React.Component {
             } = this.state,
             isvalid = this.getValidationState100Bool(valueDistillation);
         return (
-            <Tab.Pane eventKey="distillation" onEnter={this.tickStart} onExit={this.tickStop}>
+            <Tab.Pane eventKey="distillation" onEnter={this.tickStart}>
                 <p></p>
                 <Col smOffset={3} sm={6} mdOffset={0} md={4}>
                     <Thumbnail>
@@ -91,9 +90,9 @@ class Distillation extends React.Component {
                                     <circle cx="107" cy="797" r="6" className="b"/>
                                     <circle cx="107" cy="1001" r="6" className="b"/>
                                     <circle cx="107" cy="1042" r="6" className="b"/>
-                                    <text x="160" y="789" fontSize="20" className="d">{tempWater ? tempWater : 'n/a'}&#176;</text>
-                                    <text x="160" y="833" fontSize="20" className="d">{tempTakeOff ? tempTakeOff : 'n/a'}&#176;</text>
-                                    <text x="160" y="997" fontSize="20" className="d">{tempTank ? tempTank : 'n/a'}&#176;</text>
+                                    <text x="160" y="789" fontSize="20" className="d">{temperature3 ? temperature3 : 'n/a'}&#176;</text>
+                                    <text x="160" y="833" fontSize="20" className="d">{temperature2 ? temperature2 : 'n/a'}&#176;</text>
+                                    <text x="160" y="997" fontSize="20" className="d">{temperature ? temperature : 'n/a'}&#176;</text>
                                     <text x="160" y="1039" fontSize="20" className="d">{valueHeater ? valueHeater : 'n/a'}</text>
                                     <text x="104" y="801" fontSize="10">4</text>
                                     <text x="104" y="844" fontSize="10">3</text>
@@ -119,17 +118,17 @@ class Distillation extends React.Component {
                         <tbody>
                         <tr>
                             <td><Badge>4</Badge> - &#176; воды на выходе</td>
-                            <td><FormControl type="text" value={tempWater} readOnly/></td>
+                            <td><FormControl type="text" value={temperature3} readOnly/></td>
                             <td colSpan="2"></td>
                         </tr>
                         <tr>
                             <td><Badge>3</Badge> - &#176; в узле отбора</td>
-                            <td><FormControl type="text" value={tempTakeOff} readOnly/></td>
+                            <td><FormControl type="text" value={temperature2} readOnly/></td>
                             <td colSpan="2"></td>
                         </tr>
                         <tr className={settingAlarmDistillation ? 'danger' : 'success'}>
                             <td><Badge>2</Badge> - &#176; в кубе</td>
-                            <td><FormControl type="text" value={tempTank} readOnly/></td>
+                            <td><FormControl type="text" value={temperature} readOnly/></td>
                             <td>
                                 <FormGroup validationState={this.getValidationState100(valueDistillation)}>
                                     <InputGroup>

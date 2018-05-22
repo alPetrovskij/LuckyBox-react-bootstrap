@@ -1,10 +1,11 @@
 import App from './App';
+
+
 export function handleChange(e) {
     let fieldName = e.target.name;
     let fleldVal = e.target.value;
     this.setState({[fieldName]: fleldVal});
 }
-
 export function getValidationState(val, type) {
     if (val === '')
         return null;
@@ -19,8 +20,11 @@ export function getValidationState(val, type) {
         case 'timez':
             re = /^[0-9]{1,3}$/;
             break;
+        case 'url':
+            re = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/i;
+            break;
         default:
-
+            return "error"
     }
     var ret = re.test(val);
     return ret ? "success" : "error";
@@ -55,21 +59,23 @@ export function getValidationStateTPause(val) {
         return 'success';
     return null;
 }
-export function getJson(url, arg) {
-    fetch(url)
-        .then((response) => {
-            if (response.ok) {
-                if(arg === 0) {
-                    App.restarttickOnline();
-                }
-            } else{
-                // console.log('Network response was not ok.');
-            }
+
+
+export function getJson(url, arg, component) {
+    fetch(url, {method: 'PUT'})
+        // .then((response) => {
+        //     if (!response.ok)
+        //         console.log('Network response was not ok.');
+        // })
+        .then(function (response) {
+            return response.json();
         })
-        .then(res => res.json())
-        .then(
-            (result) => {
-                if(arg === 1){
+        .then(function (result) {
+                console.log('---------json result ' + JSON.stringify(result));
+
+                if (arg === 0)
+                    App.restarttickOnline();
+                else if (arg === 1) {
                     const ss = {
                         time: result.time,
                         stepBrewing: result.stepBrewing
@@ -94,23 +100,22 @@ export function getJson(url, arg) {
                         default:
                             break;
                     }
-                    this.setState(ss);
-                }else {
-                    for (var property in result) {
-                        this.setState({[property]: result[property]});
-                    }
+                    component.setState(ss);
                 }
+                for (var property in result) {
+                    component.setState({[property]: result[property]});
+                }
+
             },
             (error) => {
-                console.log('json err ' + error);
+                console.log('json err ' + error + '  ' + url);
             }
         )
 }
 
 export function sendRequest(url, arg) {
     this.setState({isLoading: true});
-    const opt = {method: 'get'};
-    fetch(url, opt)
+    fetch(url, {method: 'get'})
         .then((response) => {
             if (response.ok) {
                 console.log('res.ok');
@@ -122,6 +127,29 @@ export function sendRequest(url, arg) {
                 }, 1000);
             }
             // else
-                // console.log('Network response was not ok.');
+            // console.log('Network response was not ok.');
+        });
+}
+export function sendRequestFile(url, arg, file) {
+    this.setState({isLoading: true});
+    var formData = new FormData();
+    // formData.append('username', 'abc123');
+    formData.append('file', file);
+    fetch(url, {
+        method: 'PUT',
+        body: formData
+    })
+        .then((response) => {
+            if (response.ok) {
+                console.log('res.ok');
+                setTimeout(() => {
+                    this.setState({
+                        isLoading: false,
+                        [arg]: false
+                    });
+                }, 1000);
+            }
+            // else
+            // console.log('Network response was not ok.');
         });
 }

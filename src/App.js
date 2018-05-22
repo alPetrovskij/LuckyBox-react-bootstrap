@@ -7,15 +7,16 @@ import Distillation from './LB_distillation';
 import Reflux from './LB_reflux';
 import Brewing from './LB_brewing';
 import Heater from './LB_heater';
+import Camera from './camera.js';
 import './index.css';
 
 class App extends React.Component {
     static online = true;
+    static onlineTick = null;
 
     static tickStartOnline() {
         this.intervalOnline = setInterval(
             () => {
-                console.log('App offline');
                 this.online = false;
             },
             3000
@@ -23,7 +24,6 @@ class App extends React.Component {
     }
 
     static restarttickOnline() {
-        console.log('App online');
         this.online = true;
         clearInterval(this.intervalOnline);
         this.tickStartOnline();
@@ -102,6 +102,7 @@ class Navigation2 extends React.Component {
                             <NavItem eventKey="reflux">РК</NavItem>
                             <NavItem eventKey="brewing">Затирание</NavItem>
                             <NavItem eventKey="heater">Мощность ТЭНа</NavItem>
+                            <NavItem eventKey="camera">Камера</NavItem>
                         </Nav>
                     </Col>
                     <Col sm={12}>
@@ -110,6 +111,7 @@ class Navigation2 extends React.Component {
                             <Reflux/>
                             <Brewing/>
                             <Heater/>
+                            <Camera/>
                         </Tab.Content>
                     </Col>
                 </Row>
@@ -131,3 +133,4 @@ class Header extends React.Component {
         );
     }
 }
+

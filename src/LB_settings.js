@@ -1,63 +1,74 @@
 import React from 'react';
+import App from './App';
 import {FormGroup, FormControl, Form, Table, Alert, Tab, InputGroup} from 'react-bootstrap';
 import Button from 'react-bootstrap-button-loader';
-import {handleChange, getJson, getValidationState, sendRequest} from './util'
+import {handleChange, getJson, getValidationState, sendRequest, sendRequestFile} from './util'
 
 class Settings extends React.Component {
+
+
     constructor(props, context) {
         super(props, context);
         this.handleChange = handleChange.bind(this);
         this.sendRequest = sendRequest.bind(this);
+        this.sendRequestFile = sendRequestFile.bind(this);
         this.getJson = getJson.bind(this);
         this.getValidationState = getValidationState.bind(this);
-        this.setLoadingT = this.setLoadingT.bind(this);
+        this.setUPDATE0 = this.setUPDATE0.bind(this);
+        this.setUPDATE100 = this.setUPDATE100.bind(this);
+        this.setSSDP = this.setSSDP.bind(this);
         this.setSSDP = this.setSSDP.bind(this);
         this.setSSID = this.setSSID.bind(this);
         this.setSSIDAP = this.setSSIDAP.bind(this);
         this.setTIMEZONE = this.setTIMEZONE.bind(this);
         this.setAUTOTIMEZONE = this.setAUTOTIMEZONE.bind(this);
+        this.setCAMERA = this.setCAMERA.bind(this);
         this.handleDismiss = this.handleDismiss.bind(this);
         this.handleShow = this.handleShow.bind(this);
         this.restart = this.restart.bind(this);
         this.tickStart = this.tickStart.bind(this);
-        this.tickStop = this.tickStop.bind(this);
         this.state = {
             show: false,
             isLoading: false,
+            isLoadingUPDATE0: false,
+            isLoadingUPDATE100: false,
             isLoadingSSDP: false,
             isLoadingSSID: false,
             isLoadingSSIDAP: false,
             isLoadingTIMEZONE: false,
             isLoadingAUTOTIMEZONE: false,
+            isvalidCAMERA: false,
             isLoadingRESTART: false,
+            update0: '',
+            update100: '',
             ssdp: '',
             ssid: '',
             password: '',
             timezone: '',
             ssidAP: '',
-            passwordAP: ''
+            passwordAP: '',
+            cameraURL: ''
         };
         this.tickUrl = '/configs.json';
-        this.setUrlSSDP = "/ssdp?ssdp=" + this.state.ssdp;
-        this.setUrlSSID = "/ssid?ssid=" + this.state.ssid + "&password=" + encodeURIComponent(this.state.password);
-        this.setUrlSSIDAP = "/ssidap?ssidAP=" + this.state.ssidAP + "&passwordAP=" + encodeURIComponent(this.state.passwordAP);
-        this.setUrlTIMEZONE = "/TimeZone?timezone=" + this.state.timezone;
-        this.setUrlRESTART = "/restart?device=ok";
+        this.urlUPDATE0 = "/update?cmd=0";
+        this.urlUPDATE100 = "/update?cmd=100";
+        this.urlSSDP = "/ssdp?ssdp=";
+        this.urlSSID = "/ssid?ssid=";
+        this.urlSSIDAP = "/ssidap?ssidAP=";
+        this.urlTIMEZONE = "/TimeZone?timezone=";
+        this.urlCAMERA = "/camera?cameraurl=";
+        this.urlRESTART = "/restart?device=ok";
     }
 
     tickStart() {
-        this.interval = setInterval(
-            () => this.getJson(this.tickUrl, 0),
+        clearInterval(App.onlineTick);
+
+        App.onlineTick = setInterval(
+            () => {
+                this.getJson(this.tickUrl, 0, this)
+            },
             1000
         );
-    }
-
-    setLoadingT() {
-        this.setState({isLoadingBIN: true});
-    }
-
-    tickStop() {
-        clearInterval(this.interval);
     }
 
     handleDismiss() {
@@ -68,26 +79,35 @@ class Settings extends React.Component {
         this.setState({show: true});
     }
 
+    setUPDATE0() {
+        this.setState({isLoadingUPDATE0: true});
+        this.sendRequestFile(this.urlUPDATE0, 'isLoadingUPDATE0', this.state.update0);
+    }
+    setUPDATE100() {
+        this.setState({isLoadingUPDATE100: true});
+        this.sendRequestFile(this.urlUPDATE100, 'isLoadingUPDATE100', this.state.update100);
+    }
+
     setSSDP() {
         this.setState({isLoadingSSDP: true});
-        this.sendRequest(this.setUrlSSDP, 'isLoadingSSDP');
+        this.sendRequest(this.urlSSDP + this.state.ssdp, 'isLoadingSSDP');
     }
 
     setSSID() {
         this.setState({isLoadingSSID: true});
-        this.sendRequest(this.setUrlSSID, 'isLoadingSSID');
+        this.sendRequest(this.urlSSID + this.state.ssid + "&password=" + encodeURIComponent(this.state.password), 'isLoadingSSID');
         alert("Изменения вступят в силу после перезагрузки. Пожалуйста перезагрузите устройство.");
     }
 
     setSSIDAP() {
         this.setState({isLoadingSSIDAP: true});
-        this.sendRequest(this.setUrlSSIDAP, 'isLoadingSSIDAP');
+        this.sendRequest(this.urlSSIDAP + this.state.ssidAP + "&passwordAP=" + encodeURIComponent(this.state.passwordAP), 'isLoadingSSIDAP');
         alert("Изменения вступят в силу после перезагрузки. Пожалуйста перезагрузите устройство.");
     }
 
     setTIMEZONE() {
         this.setState({isLoadingTIMEZONE: true});
-        this.sendRequest(this.setUrlTIMEZONE, 'isLoadingTIMEZONE');
+        this.sendRequest(this.urlTIMEZONE + this.state.timezone, 'isLoadingTIMEZONE');
     }
 
     setAUTOTIMEZONE() {
@@ -95,36 +115,49 @@ class Settings extends React.Component {
         const set_date = new Date();
         const gmtHours = -set_date.getTimezoneOffset() / 60;
         this.setState({timezone: gmtHours});
-        this.sendRequest(this.setUrlTIMEZONE, 'isLoadingAUTOTIMEZONE');
+        this.sendRequest(this.urlTIMEZONE + this.state.timezone, 'isLoadingAUTOTIMEZONE');
+    }
+
+    setCAMERA() {
+        this.setState({isLoadingCAMERA: true});
+        this.sendRequest(this.urlCAMERA + this.state.cameraURL, 'isLoadingCAMERA');
     }
 
     restart() {
         this.setState({isLoadingRESTART: true});
         this.handleDismiss();
-        this.sendRequest(this.setUrlRESTART, 'isLoadingRESTART');
+        this.sendRequest(this.urlRESTART, 'isLoadingRESTART');
     }
 
     render() {
         var {
                 isLoading,
+                isLoadingUPDATE0,
+                isLoadingUPDATE100,
                 isLoadingSSDP,
                 isLoadingSSID,
                 isLoadingSSIDAP,
                 isLoadingTIMEZONE,
                 isLoadingAUTOTIMEZONE,
                 isLoadingRESTART,
+                isLoadingCAMERA,
                 show,
+                update0,
+                update100,
                 ssdp,
                 ssid,
                 password,
                 ssidAP,
                 passwordAP,
                 timezone,
+                cameraURL
             } = this.state,
             isvalidSSDP = /^[0-9a-zA-Zа-яА-Я.()]{1,15}$/.test(ssdp),
             isvalidSSID = /^[0-9a-zA-Zа-яА-Я.()]{1,15}$/.test(ssid) && /(?=.*\d)(?=.*[a-z]).{6,}/.test(password),
             isvalidSSIDAP = /^[0-9a-zA-Zа-яА-Я.()]{1,15}$/.test(ssidAP) && /(?=.*\d)(?=.*[a-z]).{6,}/.test(passwordAP),
-            isvalidTIMEZONE = /^[0-9]{1,3}$/.test(timezone);
+            isvalidTIMEZONE = /^[0-9]{1,3}$/.test(timezone),
+            isvalidCAMERA = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/i
+                .test(cameraURL);
 
         if (show) {
             return (
@@ -139,39 +172,47 @@ class Settings extends React.Component {
             );
         }
         return (
-            <Tab.Pane eventKey="settings" onEnter={this.tickStart} onExit={this.tickStop}>
+            <Tab.Pane eventKey="settings" onEnter={this.tickStart}>
                 <p></p>
                 <Table hover>
                     <tbody>
                     {/*<tr>*/}
-                        {/*<td>Обновление</td>*/}
-                        {/*<td>*/}
-                            {/*<Form inline>*/}
-                                {/*<Button href="/edit" bsStyle="primary" bsSize="small" disabled={isLoading}>*/}
-                                    {/*Открыть редактор HTML*/}
-                                {/*</Button>*/}
-                            {/*</Form>*/}
-                        {/*</td>*/}
+                    {/*<td>Обновление</td>*/}
+                    {/*<td>*/}
+                    {/*<Form inline>*/}
+                    {/*<Button href="/edit" bsStyle="primary" bsSize="small" disabled={isLoading}>*/}
+                    {/*Открыть редактор HTML*/}
+                    {/*</Button>*/}
+                    {/*</Form>*/}
+                    {/*</td>*/}
                     {/*</tr>*/}
                     <tr>
                         <td>Загрузить прошивку (bin)</td>
                         <td>
-                            <Form inline method="POST" action="/update?cmd=0">
+                            {/*<Form inline method="POST" action="/update?cmd=0">*/}
+                            <Form inline>
                                 <FormGroup>
-                                    <FormControl type="file" name='update' onChange={this.handleChange}/>
+                                    <FormControl type="file" value={update0} name='update0' onChange={this.handleChange}/>
                                 </FormGroup>{' '}
-                                <Button type="submit" bsStyle="primary" disabled={isLoading}>Загрузить</Button>
+                                {/*<Button type="submit" bsStyle="primary" disabled={isLoading}>Загрузить</Button>*/}
+                                <Button loading={isLoadingUPDATE0} bsStyle="primary" onClick={!isLoading ? this.setUPDATE0 : null} disabled={isLoading}>
+                                    Загрузить
+                                </Button>
                             </Form>
                         </td>
                     </tr>
                     <tr>
                         <td>Загрузить (WEBсервер)</td>
                         <td>
-                            <Form inline method="POST" action="/update?cmd=100">
+                            {/*<Form inline method="POST" action="/update?cmd=100">*/}
+                            <Form inline>
                                 <FormGroup>
-                                    <FormControl type="file" name='update' onChange={this.handleChange}/>
+                                    <FormControl type="file" value={update100} name='update100' onChange={this.handleChange}/>
                                 </FormGroup>{' '}
-                                <Button type="submit" bsStyle="primary" disabled={isLoading}>Загрузить</Button>
+                                {/*<Button type="submit" bsStyle="primary" disabled={isLoading}>Загрузить</Button>*/}
+                                <Button loading={isLoadingUPDATE100} bsStyle="primary" onClick={!isLoading ? this.setUPDATE100 : null} disabled={isLoading}>
+                                    Загрузить
+                                </Button>
                             </Form>
                         </td>
                     </tr>
@@ -230,10 +271,23 @@ class Settings extends React.Component {
                                 <FormGroup>
                                     <InputGroup.Button>
                                         <Button bsStyle="primary" onClick={!isLoading ? this.setTIMEZONE : null} disabled={isLoading || !isvalidTIMEZONE} loading={isLoadingTIMEZONE}>Сохранить</Button>
-                                        <Button bsStyle="primary" onClick={!isLoading ? this.setAUTOTIMEZONE : null}  disabled={isLoading} loading={isLoadingAUTOTIMEZONE}>Авто
+                                        <Button bsStyle="primary" onClick={!isLoading ? this.setAUTOTIMEZONE : null} disabled={isLoading} loading={isLoadingAUTOTIMEZONE}>Авто
                                             определение и сохранение зоны</Button>
                                     </InputGroup.Button>
                                 </FormGroup>
+                            </Form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>URL камеры</td>
+                        <td>
+                            <Form inline>
+                                <FormGroup validationState={this.getValidationState(cameraURL, 'url')}>
+                                    <FormControl type="text" value={cameraURL} placeholder="URL камеры" name='cameraURL' onChange={this.handleChange}/>
+                                </FormGroup>{' '}
+                                <Button loading={isLoadingCAMERA} bsStyle="primary" onClick={!isLoading ? this.setCAMERA : null} disabled={isLoading || !isvalidCAMERA}>
+                                    Сохранить
+                                </Button>
                             </Form>
                         </td>
                     </tr>
@@ -242,7 +296,7 @@ class Settings extends React.Component {
                         <td>
                             <Form inline>
                                 <Button bsStyle="danger" onClick={!isLoading ? this.handleShow : null} disabled={isLoading} loading={isLoadingRESTART}>
-                                 Перезагрузить
+                                    Перезагрузить
                                 </Button>
                             </Form>
                         </td>

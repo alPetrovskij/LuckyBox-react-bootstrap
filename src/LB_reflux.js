@@ -22,7 +22,6 @@ class Reflux extends React.Component {
         this.sendRequest = sendRequest.bind(this);
         this.getJson = getJson.bind(this);
         this.tickStart = this.tickStart.bind(this);
-        this.tickStop = this.tickStop.bind(this);
         this.setReflux = this.setReflux.bind(this);
         this.state = {
             isLoading: false,
@@ -38,22 +37,22 @@ class Reflux extends React.Component {
             valueHeater: ''
         };
         this.tickUrl = '/reflux.json';
-        this.setUrl = '/SetTemp?delta=' + this.state.valueReflux + '&setting=' + this.state.setting + '&temperatureAlcoholBoil=' + this.state.temperatureAlcoholBoil;
+        this.setUrl = '/SetTemp?delta=';
     }
 
     tickStart() {
-        this.interval = setInterval(
-            () => this.getJson(this.tickUrl, 0),
+        clearInterval(App.onlineTick);
+
+        App.onlineTick = setInterval(
+            () => {
+                this.getJson(this.tickUrl, 0, this)
+            },
             1000
         );
     }
 
-    tickStop() {
-        clearInterval(this.interval);
-    }
-
     setReflux() {
-        this.sendRequest(this.setUrl);
+        this.sendRequest(this.setUrl + this.state.valueReflux + '&setting=' + this.state.setting + '&temperatureAlcoholBoil=' + this.state.temperatureAlcoholBoil);
     }
 
     render() {
@@ -72,7 +71,7 @@ class Reflux extends React.Component {
             } = this.state,
             isvalid = this.getValidationState100Bool(valueReflux);
         return (
-            <Tab.Pane eventKey="reflux" onEnter={this.tickStart} onExit={this.tickStop}>
+            <Tab.Pane eventKey="reflux" onEnter={this.tickStart}>
                 <p></p>
                 <Col smOffset={3} sm={6} mdOffset={0} md={4}>
                     <Thumbnail >
@@ -120,7 +119,7 @@ class Reflux extends React.Component {
                         <tr>
                             <th>Параметр</th>
                             <th>Значение</th>
-                            <th>Дельта&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                            <th>Дельта&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                             <th>Уставка</th>
                         </tr>
                         </thead>

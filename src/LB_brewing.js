@@ -30,7 +30,6 @@ class Brewing extends React.Component {
         this.sendRequest = sendRequest.bind(this);
         this.getJson = getJson.bind(this);
         this.tickStart = this.tickStart.bind(this);
-        this.tickStop = this.tickStop.bind(this);
         this.setBrew = this.setBrew.bind(this);
         this.startBrew = this.startBrew.bind(this);
         this.stopBrew = this.stopBrew.bind(this);
@@ -54,11 +53,7 @@ class Brewing extends React.Component {
             temperature: ''
         };
         this.tickUrl = '/brewing.json';
-        this.setUrl = "/SettingBrewing?startBrewing=" + this.state.startBrewing + "&stepBrewing=" + this.state.stepBrewing +
-            "&pauseTemp1=" + this.state.pauseTemp1 + "&pauseTemp2=" + this.state.pauseTemp2 +
-            "&pauseTemp3=" + this.state.pauseTemp3 + "&pauseTemp4=" + this.state.pauseTemp4 +
-            "&pauseTime1=" + this.state.pauseTime1 + "&pauseTime2=" + this.state.pauseTime2 +
-            "&pauseTime3=" + this.state.pauseTime3 + "&pauseTime4=" + this.state.pauseTime4;
+        this.setUrl = "/SettingBrewing?startBrewing=";
     }
 
     componentDidMount() {
@@ -66,18 +61,22 @@ class Brewing extends React.Component {
     }
 
     tickStart() {
-        this.interval = setInterval(
-            () => this.getJson(this.tickUrl, 0),
+        clearInterval(App.onlineTick);
+
+        App.onlineTick = setInterval(
+            () => {
+                this.getJson(this.tickUrl, 0, this)
+            },
             1000
         );
     }
 
-    tickStop() {
-        clearInterval(this.interval);
-    }
-
     setBrew() {
-        this.sendRequest(this.setUrl);
+        this.sendRequest(this.setUrl+ this.state.startBrewing + "&stepBrewing=" + this.state.stepBrewing +
+            "&pauseTemp1=" + this.state.pauseTemp1 + "&pauseTemp2=" + this.state.pauseTemp2 +
+            "&pauseTemp3=" + this.state.pauseTemp3 + "&pauseTemp4=" + this.state.pauseTemp4 +
+            "&pauseTime1=" + this.state.pauseTime1 + "&pauseTime2=" + this.state.pauseTime2 +
+            "&pauseTime3=" + this.state.pauseTime3 + "&pauseTime4=" + this.state.pauseTime4);
     }
 
     startBrew() {
@@ -90,7 +89,7 @@ class Brewing extends React.Component {
         this.startBrewing = 0;
         this.stepBrewing = 0;
         this.setBrew();
-        this.sendRequest("/SetHeaterPower?heaterPower=" + 0);
+        this.sendRequest("/SetHeaterPower?heaterPower=0");
     }
 
     render() {
@@ -122,7 +121,7 @@ class Brewing extends React.Component {
             && this.getValidationState100Bool(pauseTemp3)
             && this.getValidationState100Bool(pauseTemp4);
         return (
-            <Tab.Pane eventKey="brewing" onEnter={this.tickStart} onExit={this.tickStop}>
+            <Tab.Pane eventKey="brewing" onEnter={this.tickStart}>
                 <p></p>
                 <Col smOffset={3} sm={6} mdOffset={0} md={4}>
                     <Thumbnail>

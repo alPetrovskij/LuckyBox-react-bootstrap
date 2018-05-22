@@ -1,4 +1,5 @@
 import React from 'react';
+import App from './App';
 import {Tab} from 'react-bootstrap';
 import Dygraph from 'dygraphs';
 import {getJson} from './util'
@@ -16,21 +17,29 @@ class Graphics extends React.Component {
             temperature4: ''
         };
         this.tickUrl = '/configs.json';
-    }
-    tickStart() {
-        this.interval = setInterval(
-            () => this.getJson(this.tickUrl),
-            1000
-        );
-        var data = [];
+
+        this.data = [];
         var t = new Date();
         for (var i = 10; i >= 0; i--) {
             var x = new Date(t.getTime() - i * 10000);
-            data.push([x, this.temperature]);
+            this.data.push([x, this.temperature]);
         }
-        const g = new Dygraph(document.getElementById("div_g"), data,
+    }
+
+    tickStart() {
+        // if(App.onlineTick != null)
+        clearInterval(App.onlineTick);
+
+        App.onlineTick = setInterval(
+            () => {
+                this.getJson(this.tickUrl, 0, this)
+            },
+            1000
+        );
+
+        const g = new Dygraph(document.getElementById("div_g"), this.data,
             {
-                // drawPoints: true,
+                drawPoints: true,
                 showRoller: true,
                 // valueRange: [20.0, 50.0],
                 labels: ['Время', 'Температура']
@@ -39,14 +48,14 @@ class Graphics extends React.Component {
         this.interval2 = setInterval(
             () => {
                 var x = new Date();
-                data.push([x, this.temperature]);
-                g.updateOptions({'file': data});
+                this.data.push([x, this.temperature]);
+                g.updateOptions({'file': this.data});
             },
             2000
         );
     }
+
     tickStop() {
-        clearInterval(this.interval);
         clearInterval(this.interval2);
     }
 

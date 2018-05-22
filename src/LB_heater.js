@@ -1,4 +1,5 @@
 import React from 'react';
+import App from './App';
 import {Form, ControlLabel, FormGroup, Tab, FormControl, Table} from 'react-bootstrap';
 import Button from 'react-bootstrap-button-loader';
 import {
@@ -18,31 +19,28 @@ class Heater extends React.Component {
         this.getValidationState100 = getValidationState100.bind(this);
         this.getJson = getJson.bind(this);
         this.tickStart = this.tickStart.bind(this);
-        this.tickStop = this.tickStop.bind(this);
         this.setHeater = this.setHeater.bind(this);
         this.state = {
             isLoading: false,
-            valueHeater: ''
+            valueHeater: 0
         };
         this.tickUrl = '/heater.json';
-        this.setUrl = "/SetHeaterPower?heaterPower=" + this.state.valueHeater + "&heaterStatus=1";
+        this.setUrl = "/SetHeaterPower?heaterStatus=1&heaterPower=";
     }
 
     tickStart() {
-        this.interval = setInterval(
+            clearInterval(App.onlineTick);
+
+        App.onlineTick = setInterval(
             () => {
-                this.getJson(this.tickUrl, 0)
+                this.getJson(this.tickUrl, 0, this)
             },
             1000
         );
     }
 
-    tickStop() {
-        clearInterval(this.interval);
-    }
-
     setHeater() {
-        this.sendRequest(this.setUrl);
+        this.sendRequest(this.setUrl + this.state.valueHeater);
     }
 
     componentDidMount() {
@@ -53,7 +51,7 @@ class Heater extends React.Component {
         const {valueHeater, isLoading} = this.state,
             isvalid = this.getValidationState100Bool(valueHeater);
         return (
-            <Tab.Pane eventKey="heater" onEnter={this.tickStart} onExit={this.tickStop}>
+            <Tab.Pane eventKey="heater" onEnter={this.tickStart}>
                 <p></p>
                 <Table hover>
                     <tbody>
