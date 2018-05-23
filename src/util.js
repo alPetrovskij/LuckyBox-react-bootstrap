@@ -113,6 +113,7 @@ export function getJson(url, arg, component) {
         )
 }
 
+
 export function sendRequest(url, arg) {
     this.setState({isLoading: true});
     fetch(url, {method: 'get'})

@@ -11,6 +11,9 @@ import {
 } from './util'
 
 class Heater extends React.Component {
+
+    static valHeater = 0;
+
     constructor(props, context) {
         super(props, context);
         this.sendRequest = sendRequest.bind(this);

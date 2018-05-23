@@ -29,38 +29,39 @@ class App extends React.Component {
         this.tickStartOnline();
     }
 
-    constructor(props, context) {
-        super(props, context);
-        this.state = {
-            onlineT: true
-        };
-        this.tickOnline = this.tickOnline.bind(this);
-    }
+    // constructor(props, context) {
+    //     super(props, context);
+        // this.state = {
+        //     onlineT: true
+        // };
+        // this.tickOnline = this.tickOnline.bind(this);
+    // }
 
-    tickOnline() {
-        this.interval = setInterval(
-            () => {
-                this.setState({
-                    onlineT: this.constructor.online
-                })
-            },
-            2000
-        );
-    }
+    // tickOnline() {
+    //     setInterval(
+    //         () => {
+    //             this.setState({
+    //                 onlineT: this.constructor.online
+    //             })
+    //         },
+    //         2000
+    //     );
+    // }
 
     componentDidMount() {
         this.constructor.tickStartOnline();
-        this.tickOnline();
+        // this.tickOnline();
     }
 
     render() {
-        const {onlineT} = this.state;
+        // const {onlineT} = this.state;
         return (
             <Tab.Container id="tab1" defaultActiveKey="home">
                 <Row className="clearfix">
                     <Col sm={12}>
                         <Nav bsStyle="tabs">
-                            <NavItem eventKey="home"><Badge bsStyle={onlineT ? 'success' : 'danger'}>Дом</Badge></NavItem>
+                            {/*<NavItem eventKey="home"><Badge bsStyle={onlineT ? 'success' : 'danger'}>Дом</Badge></NavItem>*/}
+                            <NavItem eventKey="home"><Badge bsStyle={this.online ? 'success' : 'danger'}>Дом</Badge></NavItem>
                             <NavItem eventKey="settings">Настройки</NavItem>
                             <NavItem eventKey="graphics">Графики</NavItem>
                             <NavDropdown title="Помощь">

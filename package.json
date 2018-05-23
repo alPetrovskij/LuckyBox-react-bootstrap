@@ -1,20 +1,36 @@
 {
-  "name": "LuckyBox-react-bootstrap",
+  "name": "luckybox",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "bootstrap": "^4.1.0",
+    "create-react-app": "^1.5.2",
+    "dygraphs": "^2.1.0",
     "react": "^16.3.2",
     "react-bootstrap": "^0.32.1",
+    "react-bootstrap-button-loader": "^1.0.11",
     "react-dom": "^16.3.2",
-    "react-scripts": "1.1.4",
-    "reactstrap": "^5.0.0-beta.3"
+    "react-scripts": "1.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && rimraf build/**/*.map",
-    "postbuild": "find ./build -regex '.*\\.\\(js\\|css\\)' -exec sed -i -E '\\/[\\*\\/]#\\ssourceMappingURL=main(\\.[0-9a-f]+)?\\.(css|js)\\.map(\\*\\/)?/g' {} +",
+    "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "description": "LuckyBox-react-bootstrap UI",
+  "main": "index.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alPetrovskij/LuckyBox-react-bootstrap.git"
+  },
+  "keywords": [
+    "LuckyBox-react-bootstrap"
+  ],
+  "author": "aleksei petrovski",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alPetrovskij/LuckyBox-react-bootstrap/issues"
+  },
+  "homepage": "https://github.com/alPetrovskij/LuckyBox-react-bootstrap#readme"
 }
