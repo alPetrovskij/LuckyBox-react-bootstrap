@@ -9,11 +9,13 @@
     "react-bootstrap": "^0.32.1",
     "react-bootstrap-button-loader": "^1.0.11",
     "react-dom": "^16.3.2",
-    "react-scripts": "1.1.4"
+    "react-scripts": "1.1.4",
+    "rimraf": "^2.6.2"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && rimraf ./build/**/*.map && mv build/index.html build/index.htm && rm build/manifest.json && rm build/service-worker.js && rm build/asset-manifest.json",
+    "postbuild": "find build -regex '.*\\.\\(js\\|css\\)' -exec sed -i -E '\\/[\\*\\/]#\\ssourceMappingURL=main(\\.[0-9a-f]+)?\\.(css|js)\\.map(\\*\\/)?/g' {} +  && gzip build/static/js/*.js",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
