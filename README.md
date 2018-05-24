@@ -7,7 +7,7 @@ download zip
 
 unzip folder
 
-cd LuckyBox-react-bootstrap-master folder 
+cd LuckyBox-react-bootstrap-master
 
 npm install
 
