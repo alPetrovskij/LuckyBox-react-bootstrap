@@ -33,8 +33,8 @@ class Reflux extends React.Component {
             valueReflux: '',
             setting: '',
             pressure: '',
-            temperatureAlcoholBoil: '',
-            valueHeater: ''
+            temperatureAlcoholBoil: ''
+            // valueHeater: ''
         };
         this.tickUrl = '/reflux.json';
         this.setUrl = '/SetTemp?delta=';
@@ -66,8 +66,8 @@ class Reflux extends React.Component {
                 valueReflux,
                 setting,
                 pressure,
-                temperatureAlcoholBoil,
-                valueHeater
+                temperatureAlcoholBoil
+                // valueHeater
             } = this.state,
             isvalid = this.getValidationState100Bool(valueReflux);
         return (
@@ -96,11 +96,11 @@ class Reflux extends React.Component {
                                     <circle cx="107" cy="1001" r="6" className="b"/>
                                     <circle cx="107" cy="883" r="6" className="b"/>
                                     <circle cx="107" cy="840" r="6" className="b"/>
-                                    <text x="160" y="789" fontSize="20" className="d">{temperature4 ? temperature4 : 'n/a'}&#176;</text>
-                                    <text x="160" y="833" fontSize="20" className="d">{temperature3 ? temperature3 : 'n/a'}&#176;</text>
-                                    <text x="160" y="876" fontSize="20" className="d">{temperature2 ? temperature2 : 'n/a'}&#176;</text>
-                                    <text x="160" y="997" fontSize="20" className="d">{temperature ? temperature : 'n/a'}&#176;</text>
-                                    <text x="160" y="1039" fontSize="20" className="d">{valueHeater ? valueHeater : 'n/a'}</text>
+                                    <text x="160" y="789" fontSize="14" className="d">{temperature4 ? temperature4 : 'n/a'}&#176;</text>
+                                    <text x="160" y="833" fontSize="14" className="d">{temperature3 ? temperature3 : 'n/a'}&#176;</text>
+                                    <text x="160" y="876" fontSize="14" className="d">{temperature2 ? temperature2 : 'n/a'}&#176;</text>
+                                    <text x="160" y="997" fontSize="14" className="d">{temperature ? temperature : 'n/a'}&#176;</text>
+                                    <text x="160" y="1039" fontSize="14" className="d">{this.props.heaterVal}</text>
                                     <text x="104" y="801" fontSize="10">5</text>
                                     <text x="104" y="844" fontSize="10">4</text>
                                     <text x="104" y="887" fontSize="10">3</text>
@@ -156,7 +156,7 @@ class Reflux extends React.Component {
                         </tr>
                         <tr>
                             <td><Badge>1</Badge> - мощность тена </td>
-                            <td><FormControl type="text" value={valueHeater} readOnly/></td>
+                            <td><FormControl type="text" value={this.props.heateralue} readOnly/></td>
                             <td colSpan="2"></td>
                         </tr>
                         <tr>

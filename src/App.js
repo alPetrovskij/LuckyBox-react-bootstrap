@@ -9,6 +9,7 @@ import Brewing from './LB_brewing';
 import Heater from './LB_heater';
 import Camera from './camera.js';
 import './index.css';
+import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 class App extends React.Component {
     static online = true;
@@ -29,32 +30,11 @@ class App extends React.Component {
         this.tickStartOnline();
     }
 
-    // constructor(props, context) {
-    //     super(props, context);
-        // this.state = {
-        //     onlineT: true
-        // };
-        // this.tickOnline = this.tickOnline.bind(this);
-    // }
-
-    // tickOnline() {
-    //     setInterval(
-    //         () => {
-    //             this.setState({
-    //                 onlineT: this.constructor.online
-    //             })
-    //         },
-    //         2000
-    //     );
-    // }
-
     componentDidMount() {
         this.constructor.tickStartOnline();
-        // this.tickOnline();
     }
 
     render() {
-        // const {onlineT} = this.state;
         return (
             <Tab.Container id="tab1" defaultActiveKey="home">
                 <Row className="clearfix">
@@ -74,7 +54,12 @@ class App extends React.Component {
                         </Nav>
                     </Col>
                     <Col sm={12}>
-                        <Header />
+                        <CSSTransitionGroup
+                            transitionName="carousel"
+                            transitionEnterTimeout={300}
+                            transitionLeaveTimeout={300}>
+                            <Header />
+                        </CSSTransitionGroup>
                     </Col>
                     <Col sm={12}>
                         <Tab.Content animation>
@@ -93,6 +78,18 @@ class App extends React.Component {
 export default App;
 
 class Navigation2 extends React.Component {
+
+    constructor(props, context) {
+        super(props, context);
+        this.state = {
+            heatervalue: 0
+        };
+    }
+
+    heaterCB = (dataFromHeater) => {
+        this.setState({ heatervalue: dataFromHeater });
+    };
+
     render() {
         return (
             <Tab.Container id="tab2" defaultActiveKey="heater">
@@ -108,10 +105,10 @@ class Navigation2 extends React.Component {
                     </Col>
                     <Col sm={12}>
                         <Tab.Content animation>
-                            <Distillation/>
-                            <Reflux/>
+                            <Distillation heaterVal={ this.state.heatervalue }/>
+                            <Reflux heaterVal={ this.state.heatervalue }/>
                             <Brewing/>
-                            <Heater/>
+                            <Heater callbackFromParent={this.heaterCB}/>
                             <Camera/>
                         </Tab.Content>
                     </Col>
@@ -127,7 +124,7 @@ class Header extends React.Component {
             <div>
                 <div className="row">
                     <div className="col-md-12">
-                        <img alt="Заставка" src="headerLB.jpg" width="100%"/>
+                        <img key='a1' alt="Заставка" src="headerLB.jpg" width="100%"/>
                     </div>
                 </div>
             </div>

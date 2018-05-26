@@ -12,7 +12,6 @@ import {
 
 class Heater extends React.Component {
 
-    static valHeater = 0;
 
     constructor(props, context) {
         super(props, context);
@@ -43,6 +42,9 @@ class Heater extends React.Component {
     }
 
     setHeater() {
+
+        this.props.callbackFromParent(this.state.valueHeater);
+
         this.sendRequest(this.setUrl + this.state.valueHeater);
     }
 

@@ -140,8 +140,8 @@ class Brewing extends React.Component {
                                     <rect width="37" height="4" x="60" y="1034" rx="2" ry="2" className="f"/>
                                     <circle cy="1001" cx="107" r="6" className="b"/>
                                     <circle cx="107" cy="895" r="6" className="b"/>
-                                    <text x="160" y="890" fontSize="20" className="d">{activePause ? activePause : 'n/a'}</text>
-                                    <text x="160" y="997" fontSize="20" className="d">{temperature ? temperature : 'n/a'}&#176;</text>
+                                    <text x="160" y="890" fontSize="14" className="d">{activePause ? activePause : 'n/a'}</text>
+                                    <text x="160" y="997" fontSize="14" className="d">{temperature ? temperature : 'n/a'}&#176;</text>
                                     <text x="104" y="899" fontSize="10">P</text>
                                     <text x="104" y="1005" fontSize="10">1</text>
                                 </g>

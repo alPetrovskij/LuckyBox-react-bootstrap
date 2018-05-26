@@ -10,6 +10,7 @@
     "react-bootstrap-button-loader": "^1.0.11",
     "react-dom": "^16.3.2",
     "react-scripts": "1.1.4",
+    "react-transition-group": "^1.2.1",
     "rimraf": "^2.6.2"
   },
   "scripts": {
@@ -34,5 +35,5 @@
   "bugs": {
     "url": "https://github.com/alPetrovskij/LuckyBox-react-bootstrap/issues"
   },
-  "homepage": "https://github.com/alPetrovskij/LuckyBox-react-bootstrap#readme"
+  "homepage": "/"
 }

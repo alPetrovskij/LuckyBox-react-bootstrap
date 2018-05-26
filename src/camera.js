@@ -11,7 +11,7 @@ class Camera extends React.Component {
         this.state = {
             cameraURL: ''
         };
-        this.tickUrl = '/camera.json';
+        this.tickUrl = '/heater.json';
     }
 
     tickStart() {

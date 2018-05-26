@@ -11,8 +11,8 @@ import {
     Badge
 } from 'react-bootstrap';
 import Button from 'react-bootstrap-button-loader';
+import {handleChange, getValidationState100Bool, getValidationState100, getJson, sendRequest} from './util';
 
-import {handleChange, getValidationState100Bool, getValidationState100, getJson, sendRequest} from './util'
 
 class Distillation extends React.Component {
     constructor(props, context) {
@@ -31,8 +31,8 @@ class Distillation extends React.Component {
             temperature: '',
             settingTank: '',
             valueDistillation: '',
-            settingAlarmDistillation: false,
-            valueHeater: ''
+            settingAlarmDistillation: false
+            // valueHeater: ''
         };
         this.tickUrl = '/distillation.json';
         this.setUrl = '/SetTempTank?SettingTank=';
@@ -61,8 +61,8 @@ class Distillation extends React.Component {
                 settingTank,
                 valueDistillation,
                 settingAlarmDistillation,
-                isLoading,
-                valueHeater
+                isLoading
+                // valueHeater
             } = this.state,
             isvalid = this.getValidationState100Bool(valueDistillation);
         return (
@@ -90,10 +90,10 @@ class Distillation extends React.Component {
                                     <circle cx="107" cy="797" r="6" className="b"/>
                                     <circle cx="107" cy="1001" r="6" className="b"/>
                                     <circle cx="107" cy="1042" r="6" className="b"/>
-                                    <text x="160" y="789" fontSize="20" className="d">{temperature3 ? temperature3 : 'n/a'}&#176;</text>
-                                    <text x="160" y="833" fontSize="20" className="d">{temperature2 ? temperature2 : 'n/a'}&#176;</text>
-                                    <text x="160" y="997" fontSize="20" className="d">{temperature ? temperature : 'n/a'}&#176;</text>
-                                    <text x="160" y="1039" fontSize="20" className="d">{valueHeater ? valueHeater : 'n/a'}</text>
+                                    <text x="160" y="789" fontSize="14" className="d">{temperature3 ? temperature3 : 'n/a'}&#176;</text>
+                                    <text x="160" y="833" fontSize="14" className="d">{temperature2 ? temperature2 : 'n/a'}&#176;</text>
+                                    <text x="160" y="997" fontSize="14" className="d">{temperature ? temperature : 'n/a'}&#176;</text>
+                                    <text x="160" y="1039" fontSize="14" className="d">{this.props.heaterVal}</text>
                                     <text x="104" y="801" fontSize="10">4</text>
                                     <text x="104" y="844" fontSize="10">3</text>
                                     <text x="104" y="1005" fontSize="10">2</text>
@@ -143,7 +143,7 @@ class Distillation extends React.Component {
                         </tr>
                         <tr>
                             <td><Badge>1</Badge> - мощность тена </td>
-                            <td><FormControl type="text" value={valueHeater} readOnly/></td>
+                            <td><FormControl type="text" value={this.props.heateralue} readOnly/></td>
                             <td colSpan="2"></td>
                         </tr>
                         </tbody>
