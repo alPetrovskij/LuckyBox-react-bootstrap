@@ -23,6 +23,7 @@ class Distillation extends React.Component {
         this.sendRequest = sendRequest.bind(this);
         this.getJson = getJson.bind(this);
         this.tickStart = this.tickStart.bind(this);
+        this.tickStop = this.tickStop.bind(this);
         this.setTank = this.setTank.bind(this);
         this.state = {
             isLoading: false,
@@ -31,8 +32,8 @@ class Distillation extends React.Component {
             temperature: '',
             settingTank: '',
             valueDistillation: '',
-            settingAlarmDistillation: false
-            // valueHeater: ''
+            settingAlarmDistillation: false,
+            settingAlarmDistillationFlash: false
         };
         this.tickUrl = '/distillation.json';
         this.setUrl = '/SetTempTank?SettingTank=';
@@ -40,13 +41,31 @@ class Distillation extends React.Component {
 
     tickStart() {
         clearInterval(App.onlineTick);
-
+        console.log('---------------------tickStart');
         App.onlineTick = setInterval(
             () => {
                 this.getJson(this.tickUrl, 0, this)
             },
             1000
         );
+
+        this.flash = setInterval(
+            () => {
+                if(this.state.settingAlarmDistillation){
+                    // this.setState({settingAlarmDistillationFlash: !this.state.settingAlarmDistillationFlash})
+
+                    this.setState(prevState => ({
+                        settingAlarmDistillationFlash: !prevState.settingAlarmDistillationFlash
+                    }));
+
+                }
+            },
+            1000
+        );
+    }
+    tickStop() {
+        clearInterval(this.flash);
+        console.log('---------------------tickStop');
     }
 
     setTank() {
@@ -61,19 +80,19 @@ class Distillation extends React.Component {
                 settingTank,
                 valueDistillation,
                 settingAlarmDistillation,
+                settingAlarmDistillationFlash,
                 isLoading
-                // valueHeater
             } = this.state,
             isvalid = this.getValidationState100Bool(valueDistillation);
         return (
-            <Tab.Pane eventKey="distillation" onEnter={this.tickStart}>
+            <Tab.Pane eventKey="distillation" onEnter={this.tickStart} onExit={this.tickStop}>
                 <p></p>
                 <Col smOffset={3} sm={6} mdOffset={0} md={4}>
                     <Thumbnail>
                         <div className="svg">
                             <svg width="80%" height="80%" viewBox="0 0 160 300">
                                 <style>
-                                    { '.svg{text-align:center;}.o{fill:none;stroke:'}{ App.online ? 'green' : 'black'}{';stroke-width:2;}.r1{fill:'}{settingAlarmDistillation ? 'red' : 'none'}{';stroke-width:2;stroke:#000;}.a{fill:none;stroke:#000;}.b{fill:#fff;stroke:#000;}.c{fill:#33c3ff;stroke-width:2;stroke:#000;}.d{text-align:end;text-anchor:end;}.f{fill:red;stroke-width:2;stroke:#000;}.e{fill:#fff;stroke:#000;stroke-width:2;}' }
+                                    { '.svg{text-align:center;}.o{fill:none;stroke:'}{ this.props.onl ? 'green' : 'black'}{';stroke-width:2;}.r1{fill:'}{settingAlarmDistillationFlash ? 'red' : 'none'}{';stroke-width:2;stroke:#000;}.a{fill:none;stroke:#000;}.b{fill:#fff;stroke:#000;}.c{fill:#33c3ff;stroke-width:2;stroke:#000;}.d{text-align:end;text-anchor:end;}.f{fill:red;stroke-width:2;stroke:#000;}.e{fill:#fff;stroke:#000;stroke-width:2;}' }
                                 </style>
                                 <g transform="translate(0 -752)">
                                     <path d="M62 823c32 30 67 11 96 14M62 779c23 30 67 10 96 13M93 993c11 18 38 4 67 8M92 1033c11 17 39 6 68 9" className="a"/>
@@ -90,10 +109,10 @@ class Distillation extends React.Component {
                                     <circle cx="107" cy="797" r="6" className="b"/>
                                     <circle cx="107" cy="1001" r="6" className="b"/>
                                     <circle cx="107" cy="1042" r="6" className="b"/>
-                                    <text x="160" y="789" fontSize="14" className="d">{temperature3 ? temperature3 : 'n/a'}&#176;</text>
-                                    <text x="160" y="833" fontSize="14" className="d">{temperature2 ? temperature2 : 'n/a'}&#176;</text>
-                                    <text x="160" y="997" fontSize="14" className="d">{temperature ? temperature : 'n/a'}&#176;</text>
-                                    <text x="160" y="1039" fontSize="14" className="d">{this.props.heaterVal}</text>
+                                    <text x="160" y="789" fontSize="12" className="d">{temperature3 ? temperature3 : 'n/a'}&#176;</text>
+                                    <text x="160" y="833" fontSize="12" className="d">{temperature2 ? temperature2 : 'n/a'}&#176;</text>
+                                    <text x="160" y="997" fontSize="12" className="d">{temperature ? temperature : 'n/a'}&#176;</text>
+                                    <text x="160" y="1039" fontSize="12" className="d">{this.props.heaterVal}</text>
                                     <text x="104" y="801" fontSize="10">4</text>
                                     <text x="104" y="844" fontSize="10">3</text>
                                     <text x="104" y="1005" fontSize="10">2</text>
@@ -142,8 +161,8 @@ class Distillation extends React.Component {
                             <td><FormControl type="text" value={settingTank} readOnly/></td>
                         </tr>
                         <tr>
-                            <td><Badge>1</Badge> - мощность тена </td>
-                            <td><FormControl type="text" value={this.props.heateralue} readOnly/></td>
+                            <td><Badge>1</Badge> - мощность тена</td>
+                            <td><FormControl type="text" value={this.props.heaterVal} readOnly/></td>
                             <td colSpan="2"></td>
                         </tr>
                         </tbody>

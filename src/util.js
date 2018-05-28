@@ -62,11 +62,20 @@ export function getValidationStateTPause(val) {
 
 
 export function getJson(url, arg, component) {
-    fetch(url, {method: 'PUT'})
-        // .then((response) => {
-        //     if (!response.ok)
-        //         console.log('Network response was not ok.');
-        // })
+
+    var myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    myHeaders.append('pragma', 'no-cache');
+    myHeaders.append('cache-control', 'no-cache');
+    var myInit = {
+        method: 'PUT',
+        headers: myHeaders,
+    };
+    fetch(url, myInit)
+    // .then((response) => {
+    //     if (!response.ok)
+    //         console.log('Network response was not ok.');
+    // })
         .then(function (response) {
             return response.json();
         })
@@ -75,7 +84,7 @@ export function getJson(url, arg, component) {
 
                 if (arg === 0)
                     App.restarttickOnline();
-                else if (arg === 1) {
+                 else if (arg === 1) {
                     const ss = {
                         time: result.time,
                         stepBrewing: result.stepBrewing

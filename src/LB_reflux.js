@@ -22,6 +22,7 @@ class Reflux extends React.Component {
         this.sendRequest = sendRequest.bind(this);
         this.getJson = getJson.bind(this);
         this.tickStart = this.tickStart.bind(this);
+        this.tickStop = this.tickStop.bind(this);
         this.setReflux = this.setReflux.bind(this);
         this.state = {
             isLoading: false,
@@ -30,11 +31,11 @@ class Reflux extends React.Component {
             temperature2: '',
             temperature: '',
             settingAlarmReflux: false,
+            settingAlarmRefluxFlash: false,
             valueReflux: '',
             setting: '',
             pressure: '',
             temperatureAlcoholBoil: ''
-            // valueHeater: ''
         };
         this.tickUrl = '/reflux.json';
         this.setUrl = '/SetTemp?delta=';
@@ -49,6 +50,23 @@ class Reflux extends React.Component {
             },
             1000
         );
+
+        this.flash = setInterval(
+            () => {
+                if(this.state.settingAlarmReflux){
+                    // this.setState({settingAlarmRefluxFlash: !this.state.settingAlarmRefluxFlash})
+                    this.setState(prevState => ({
+                        settingAlarmRefluxFlash: !prevState.settingAlarmRefluxFlash
+                    }));
+                }
+            },
+            1000
+        );
+    }
+
+    tickStop() {
+        clearInterval(this.flash);
+        console.log('---------------------tickStop');
     }
 
     setReflux() {
@@ -63,22 +81,22 @@ class Reflux extends React.Component {
                 temperature3,
                 temperature4,
                 settingAlarmReflux,
+                settingAlarmRefluxFlash,
                 valueReflux,
                 setting,
                 pressure,
                 temperatureAlcoholBoil
-                // valueHeater
             } = this.state,
             isvalid = this.getValidationState100Bool(valueReflux);
         return (
-            <Tab.Pane eventKey="reflux" onEnter={this.tickStart}>
+            <Tab.Pane eventKey="reflux" onEnter={this.tickStart} onExit={this.tickStop}>
                 <p></p>
                 <Col smOffset={3} sm={6} mdOffset={0} md={4}>
                     <Thumbnail >
                         <div className="svg">
                             <svg width="80%" height="80%" viewBox="0 0 160 300">
                                 <style>
-                                    {'.svg{text-align:center;}.o{fill:none;stroke:'}{ App.online ? 'green' : 'black'}{';stroke-width:2;}.r2{fill:'}{settingAlarmReflux ? 'red' : 'none'}{';stroke-width:2;stroke:#000;}.a{fill:none;stroke:#000;}.b{fill:#fff;stroke:#000;}.c{fill:#33c3ff;stroke-width:2;stroke:#000;}.d{text-align:end;text-anchor:end;}.f{fill:red;stroke-width:2;stroke:#000;}.e{fill:#fff;stroke:#000;stroke-width:2;}'}
+                                    {'.svg{text-align:center;}.o{fill:none;stroke:'}{ this.props.onl ? 'green' : 'black'}{';stroke-width:2;}.r2{fill:'}{settingAlarmRefluxFlash ? 'red' : 'none'}{';stroke-width:2;stroke:#000;}.a{fill:none;stroke:#000;}.b{fill:#fff;stroke:#000;}.c{fill:#33c3ff;stroke-width:2;stroke:#000;}.d{text-align:end;text-anchor:end;}.f{fill:red;stroke-width:2;stroke:#000;}.e{fill:#fff;stroke:#000;stroke-width:2;}'}
                                 </style>
                                 <g transform="translate(0 -752)">
                                     <path d="M62 823c32 30 67 11 96 14M62 779c23 30 67 10 96 13M93 993c11 18 38 4 67 8M92 1033c11 17 39 6 68 9" className="a"/>
@@ -96,11 +114,11 @@ class Reflux extends React.Component {
                                     <circle cx="107" cy="1001" r="6" className="b"/>
                                     <circle cx="107" cy="883" r="6" className="b"/>
                                     <circle cx="107" cy="840" r="6" className="b"/>
-                                    <text x="160" y="789" fontSize="14" className="d">{temperature4 ? temperature4 : 'n/a'}&#176;</text>
-                                    <text x="160" y="833" fontSize="14" className="d">{temperature3 ? temperature3 : 'n/a'}&#176;</text>
-                                    <text x="160" y="876" fontSize="14" className="d">{temperature2 ? temperature2 : 'n/a'}&#176;</text>
-                                    <text x="160" y="997" fontSize="14" className="d">{temperature ? temperature : 'n/a'}&#176;</text>
-                                    <text x="160" y="1039" fontSize="14" className="d">{this.props.heaterVal}</text>
+                                    <text x="160" y="789" fontSize="12" className="d">{temperature4 ? temperature4 : 'n/a'}&#176;</text>
+                                    <text x="160" y="833" fontSize="12" className="d">{temperature3 ? temperature3 : 'n/a'}&#176;</text>
+                                    <text x="160" y="876" fontSize="12" className="d">{temperature2 ? temperature2 : 'n/a'}&#176;</text>
+                                    <text x="160" y="997" fontSize="12" className="d">{temperature ? temperature : 'n/a'}&#176;</text>
+                                    <text x="160" y="1039" fontSize="12" className="d">{this.props.heaterVal}</text>
                                     <text x="104" y="801" fontSize="10">5</text>
                                     <text x="104" y="844" fontSize="10">4</text>
                                     <text x="104" y="887" fontSize="10">3</text>
@@ -156,7 +174,7 @@ class Reflux extends React.Component {
                         </tr>
                         <tr>
                             <td><Badge>1</Badge> - мощность тена </td>
-                            <td><FormControl type="text" value={this.props.heateralue} readOnly/></td>
+                            <td><FormControl type="text" value={this.props.heaterVal} readOnly/></td>
                             <td colSpan="2"></td>
                         </tr>
                         <tr>

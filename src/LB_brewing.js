@@ -72,7 +72,7 @@ class Brewing extends React.Component {
     }
 
     setBrew() {
-        this.sendRequest(this.setUrl+ this.state.startBrewing + "&stepBrewing=" + this.state.stepBrewing +
+        this.sendRequest(this.setUrl + this.state.startBrewing + "&stepBrewing=" + this.state.stepBrewing +
             "&pauseTemp1=" + this.state.pauseTemp1 + "&pauseTemp2=" + this.state.pauseTemp2 +
             "&pauseTemp3=" + this.state.pauseTemp3 + "&pauseTemp4=" + this.state.pauseTemp4 +
             "&pauseTime1=" + this.state.pauseTime1 + "&pauseTime2=" + this.state.pauseTime2 +
@@ -94,22 +94,22 @@ class Brewing extends React.Component {
 
     render() {
         const {
-            isLoading,
-            pauseTime1,
-            pauseTemp1,
-            pauseTime2,
-            pauseTemp2,
-            pauseTime3,
-            pauseTemp3,
-            pauseTime4,
-            pauseTemp4,
-            statusPause1,
-            statusPause2,
-            statusPause3,
-            statusPause4,
-            time,
-            temperature
-        } = this.state,
+                isLoading,
+                pauseTime1,
+                pauseTemp1,
+                pauseTime2,
+                pauseTemp2,
+                pauseTime3,
+                pauseTemp3,
+                pauseTime4,
+                pauseTemp4,
+                statusPause1,
+                statusPause2,
+                statusPause3,
+                statusPause4,
+                time,
+                temperature
+            } = this.state,
             activePause = statusPause1 ? '1' : statusPause2 ? '2' : statusPause3 ? '3' : statusPause4 ? '4' : 'n/a';
 
         const isvalid = this.getValidationStateTPauseBool(pauseTime1)
@@ -128,7 +128,7 @@ class Brewing extends React.Component {
                         <div className="svg">
                             <svg width="80%" height="80%" viewBox="0 0 170 200">
                                 <style>
-                                    {'.svg{text-align:center;}.o{fill:none;stroke:'}{ App.online ? 'green' : 'black'}{';stroke-width:2;}.a{fill:none;stroke:#000;}.b{fill:#fff;stroke:#000;}.c{fill:#33c3ff;stroke-width:2;stroke:#000;}.d{text-align:end;text-anchor:end;}.f{fill:red;stroke-width:2;stroke:#000;}.e{fill:#fff;stroke:#000;stroke-width:2;}'}
+                                    {'.svg{text-align:center;}.o{fill:none;stroke:'}{ this.props.onl ? 'green' : 'black'}{';stroke-width:2;}.a{fill:none;stroke:#000;}.b{fill:#fff;stroke:#000;}.c{fill:#33c3ff;stroke-width:2;stroke:#000;}.d{text-align:end;text-anchor:end;}.f{fill:red;stroke-width:2;stroke:#000;}.e{fill:#fff;stroke:#000;stroke-width:2;}'}
                                 </style>
                                 <path d="M23 47h65" className="e"/>
                                 <g transform="translate(6 -852)">
@@ -140,8 +140,8 @@ class Brewing extends React.Component {
                                     <rect width="37" height="4" x="60" y="1034" rx="2" ry="2" className="f"/>
                                     <circle cy="1001" cx="107" r="6" className="b"/>
                                     <circle cx="107" cy="895" r="6" className="b"/>
-                                    <text x="160" y="890" fontSize="14" className="d">{activePause ? activePause : 'n/a'}</text>
-                                    <text x="160" y="997" fontSize="14" className="d">{temperature ? temperature : 'n/a'}&#176;</text>
+                                    <text x="160" y="890" fontSize="12" className="d">{activePause ? activePause : 'n/a'}</text>
+                                    <text x="160" y="997" fontSize="12" className="d">{temperature ? temperature : 'n/a'}&#176;</text>
                                     <text x="104" y="899" fontSize="10">P</text>
                                     <text x="104" y="1005" fontSize="10">1</text>
                                 </g>
