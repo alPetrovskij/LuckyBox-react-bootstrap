@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import {Tab, MenuItem, Nav, Row, Col, NavItem, NavDropdown, Badge} from 'react-bootstrap';
 import Settings from './LB_settings';
 import Graphics from './LB_graphics';
@@ -8,66 +9,33 @@ import Reflux from './LB_reflux';
 import Brewing from './LB_brewing';
 import Heater from './LB_heater';
 import Camera from './camera.js';
+import SettingSensors from './LB_settingSensors';
 import './index.css';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 class App extends React.Component {
-    static online = true;
+
     static onlineTick = null;
 
-    static tickStartOnline() {
-        this.intervalOnline = setInterval(
-            () => {
-                this.online = false;
-            },
-            3000
-        );
-    }
-
-    static restarttickOnline() {
-        this.online = true;
-        clearInterval(this.intervalOnline);
-        this.tickStartOnline();
-    }
-
-    constructor(props, context) {
-        super(props, context);
-        this.state = {
-            onlineT: true
-        };
-        this.tickOnline = this.tickOnline.bind(this);
-    }
-
-    tickOnline() {
-        setInterval(
-            () => {
-                this.setState({
-                    onlineT: this.constructor.online
-                });
-                console.log('onlineT ' + this.constructor.online);
-            },
-            2000
-        );
-    }
-
-
-    componentDidMount() {
-        this.constructor.tickStartOnline();
-        this.tickOnline();
-    }
+    onOnline = () => {
+        this.props.onOnlineOn();
+    };
+    onOnSetHeater = (val) => {
+        this.props.onOnSetHeater(val);
+    };
 
     render() {
-        const {onlineT} = this.state;
+
         return (
             <Tab.Container id="tab1" defaultActiveKey="home">
                 <Row className="clearfix">
                     <Col sm={12}>
                         <Nav bsStyle="tabs">
-                            <NavItem eventKey="home"><Badge bsStyle={onlineT ? 'success' : 'danger'}>Дом</Badge></NavItem>
+                            <NavItem eventKey="home"><Badge bsStyle={this.props.online ? 'success' : 'danger'}>Дом</Badge></NavItem>
                             <NavItem eventKey="settings">Настройки</NavItem>
                             <NavItem eventKey="graphics">Графики</NavItem>
                             <NavDropdown title="Помощь">
-                                <MenuItem eventKey="help1">Подключение датчиков</MenuItem>
+                                <MenuItem eventKey="settingSensors">Подключение датчиков</MenuItem>
                                 <MenuItem eventKey="help2" href="https://luckycenter.ru/mnogofunkcionalnaja-avtomatika-luckybox">Обновление
                                     прошивки</MenuItem>
                                 <MenuItem eventKey="help3">Благодарности</MenuItem>
@@ -87,10 +55,10 @@ class App extends React.Component {
                     </Col>
                     <Col sm={12}>
                         <Tab.Content animation>
-                            <Tab.Pane eventKey="home"><Navigation2 onl = {this.state.onlineT} /></Tab.Pane>
+                            <Tab.Pane eventKey="home"><Navigation2 onOnSetHeater={this.onOnSetHeater} onOnline={this.onOnline}  online = {this.props.online} heaterVal = {this.props.heaterVal}/></Tab.Pane>
                             <Settings/>
                             <Graphics/>
-                            <Tab.Pane eventKey="help1">Подключение датчиков</Tab.Pane>
+                            <SettingSensors/>
                             <Appreciation/>
                         </Tab.Content>
                     </Col>
@@ -99,21 +67,23 @@ class App extends React.Component {
         );
     }
 }
-export default App;
+export default connect(
+    state => ({
+        online: state.online,
+        heaterVal: state.heaterVal
+    }),
+    dispatch => ({
+        onOnlineOn: () => {
+            dispatch({ type: 'ONLINE_ON'});
+        },
+        onOnSetHeater: (val) => {
+            dispatch({ type: 'HEATER_VAL', payload: val});
+        }
+    })
+)(App);
+
 
 class Navigation2 extends React.Component {
-
-    constructor(props, context) {
-        super(props, context);
-        this.state = {
-            heatervalue: 0
-        };
-    }
-
-    heaterCB = (dataFromHeater) => {
-        this.setState({heatervalue: dataFromHeater});
-    };
-
     render() {
         return (
             <Tab.Container id="tab2" defaultActiveKey="heater">
@@ -129,10 +99,10 @@ class Navigation2 extends React.Component {
                     </Col>
                     <Col sm={12}>
                         <Tab.Content animation>
-                            <Distillation heaterVal={ this.state.heatervalue } onl={ this.props.onl } />
-                            <Reflux heaterVal={ this.state.heatervalue } onl={ this.props.onl }/>
-                            <Brewing onl={ this.props.onl } />
-                            <Heater callbackFromParent={this.heaterCB}/>
+                            <Distillation heaterVal={ this.props.heaterVal } online={ this.props.online} onOnline={this.props.onOnline} />
+                            <Reflux heaterVal={ this.props.heaterVal } online={ this.props.online } onOnline={this.props.onOnline} />
+                            <Brewing online={ this.props.online } onOnline={this.props.onOnline}  />
+                            <Heater onOnSetHeater={this.props.onOnSetHeater}/>
                             <Camera/>
                         </Tab.Content>
                     </Col>

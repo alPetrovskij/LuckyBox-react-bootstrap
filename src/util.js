@@ -1,6 +1,3 @@
-import App from './App';
-
-
 export function handleChange(e) {
     let fieldName = e.target.name;
     let fleldVal = e.target.value;
@@ -83,7 +80,7 @@ export function getJson(url, arg, component) {
                 console.log('---------json result ' + JSON.stringify(result));
 
                 if (arg === 0)
-                    App.restarttickOnline();
+                    component.props.onOnline();
                  else if (arg === 1) {
                     const ss = {
                         time: result.time,
@@ -114,14 +111,12 @@ export function getJson(url, arg, component) {
                 for (var property in result) {
                     component.setState({[property]: result[property]});
                 }
-
             },
             (error) => {
                 console.log('json err ' + error + '  ' + url);
             }
         )
 }
-
 
 export function sendRequest(url, arg) {
     this.setState({isLoading: true});

@@ -31,7 +31,7 @@ class Heater extends React.Component {
     }
 
     tickStart() {
-            clearInterval(App.onlineTick);
+        clearInterval(App.onlineTick);
 
         App.onlineTick = setInterval(
             () => {
@@ -42,8 +42,7 @@ class Heater extends React.Component {
     }
 
     setHeater() {
-
-        this.props.callbackFromParent(this.state.valueHeater);
+        this.props.onOnSetHeater(this.state.valueHeater);
 
         this.sendRequest(this.setUrl + this.state.valueHeater);
     }

@@ -7,7 +7,8 @@ import {
     FormGroup,
     FormControl,
     InputGroup,
-    Tab
+    Tab,
+    ProgressBar
 } from 'react-bootstrap';
 import Button from 'react-bootstrap-button-loader';
 import {
@@ -128,7 +129,7 @@ class Brewing extends React.Component {
                         <div className="svg">
                             <svg width="80%" height="80%" viewBox="0 0 170 200">
                                 <style>
-                                    {'.svg{text-align:center;}.o{fill:none;stroke:'}{ this.props.onl ? 'green' : 'black'}{';stroke-width:2;}.a{fill:none;stroke:#000;}.b{fill:#fff;stroke:#000;}.c{fill:#33c3ff;stroke-width:2;stroke:#000;}.d{text-align:end;text-anchor:end;}.f{fill:red;stroke-width:2;stroke:#000;}.e{fill:#fff;stroke:#000;stroke-width:2;}'}
+                                    {'.svg{text-align:center;}.o{fill:none;stroke:'}{ this.props.online ? 'green' : 'black'}{';stroke-width:2;}.a{fill:none;stroke:#000;}.b{fill:#fff;stroke:#000;}.c{fill:#33c3ff;stroke-width:2;stroke:#000;}.d{text-align:end;text-anchor:end;}.f{fill:red;stroke-width:2;stroke:#000;}.e{fill:#fff;stroke:#000;stroke-width:2;}'}
                                 </style>
                                 <path d="M23 47h65" className="e"/>
                                 <g transform="translate(6 -852)">
@@ -152,6 +153,14 @@ class Brewing extends React.Component {
                     </Thumbnail>
                 </Col>
                 <Col sm={12} md={8}>
+
+                    <ProgressBar>
+                        {/*<ProgressBar striped bsStyle="success" now={35} key={1} /> now={now} label={`${now}%`}*/}
+                        <ProgressBar bsStyle="warning" now={20} key={2} />
+                        <ProgressBar active bsStyle="danger" now={10} key={3} />
+                        <ProgressBar active bsStyle="success" now={0} key={4} />
+                    </ProgressBar>
+
                     <FormGroup>
                         <InputGroup>
                             <FormControl type="text" value={time} readOnly/>

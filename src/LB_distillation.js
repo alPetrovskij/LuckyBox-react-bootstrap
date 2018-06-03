@@ -92,7 +92,7 @@ class Distillation extends React.Component {
                         <div className="svg">
                             <svg width="80%" height="80%" viewBox="0 0 160 300">
                                 <style>
-                                    { '.svg{text-align:center;}.o{fill:none;stroke:'}{ this.props.onl ? 'green' : 'black'}{';stroke-width:2;}.r1{fill:'}{settingAlarmDistillationFlash ? 'red' : 'none'}{';stroke-width:2;stroke:#000;}.a{fill:none;stroke:#000;}.b{fill:#fff;stroke:#000;}.c{fill:#33c3ff;stroke-width:2;stroke:#000;}.d{text-align:end;text-anchor:end;}.f{fill:red;stroke-width:2;stroke:#000;}.e{fill:#fff;stroke:#000;stroke-width:2;}' }
+                                    { '.svg{text-align:center;}.o{fill:none;stroke:'}{ this.props.online ? 'green' : 'black'}{';stroke-width:2;}.r1{fill:'}{settingAlarmDistillationFlash ? 'red' : 'none'}{';stroke-width:2;stroke:#000;}.a{fill:none;stroke:#000;}.b{fill:#fff;stroke:#000;}.c{fill:#33c3ff;stroke-width:2;stroke:#000;}.d{text-align:end;text-anchor:end;}.f{fill:red;stroke-width:2;stroke:#000;}.e{fill:#fff;stroke:#000;stroke-width:2;}' }
                                 </style>
                                 <g transform="translate(0 -752)">
                                     <path d="M62 823c32 30 67 11 96 14M62 779c23 30 67 10 96 13M93 993c11 18 38 4 67 8M92 1033c11 17 39 6 68 9" className="a"/>
@@ -162,7 +162,7 @@ class Distillation extends React.Component {
                         </tr>
                         <tr>
                             <td><Badge>1</Badge> - мощность тена</td>
-                            <td><FormControl type="text" value={this.props.heaterVal} readOnly/></td>
+                            <td><FormControl type="text" value={this.props.heaterVal } readOnly/></td>
                             <td colSpan="2"></td>
                         </tr>
                         </tbody>

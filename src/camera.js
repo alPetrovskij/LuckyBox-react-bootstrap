@@ -8,9 +8,9 @@ class Camera extends React.Component {
         super(props, context);
         this.getJson = getJson.bind(this);
         this.tickStart = this.tickStart.bind(this);
-        this.state = {
-            cameraURL: ''
-        };
+        // this.state = {
+        //     cameraURL: ''
+        // };
         this.tickUrl = '/heater.json';
     }
 
@@ -28,8 +28,8 @@ class Camera extends React.Component {
         return (
             <Tab.Pane eventKey="camera" onEnter={this.tickStart}>
                 <p></p>
-                {/*<img alt="camera" src={this.state.cameraURL ? this.state.cameraURL : 'http://10.0.1.20:8081'} width="100%"/>*/}
-                <img alt="camera" src={this.state.cameraURL ? this.state.cameraURL : 'http://192.168.1.86:8081'} width="100%"/>
+                {/*<img alt="camera" src={this.props.cameraURL ? this.props.cameraURL : 'http://10.0.1.20:8081'} width="100%"/>*/}
+                <img alt="camera" src={this.props.cameraURL ? this.props.cameraURL : 'http://192.168.1.86:8081'} width="100%"/>
             </Tab.Pane>
         );
     }
