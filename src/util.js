@@ -69,10 +69,10 @@ export function getJson(url, arg, component) {
         headers: myHeaders,
     };
     fetch(url, myInit)
-    // .then((response) => {
-    //     if (!response.ok)
-    //         console.log('Network response was not ok.');
-    // })
+        .then((response) => {
+            if (!response.ok)
+                console.log('getJson response was not ok.');
+        })
         .then(function (response) {
             return response.json();
         })
@@ -81,7 +81,7 @@ export function getJson(url, arg, component) {
 
                 if (arg === 0)
                     component.props.onOnline();
-                 else if (arg === 1) {
+                else if (arg === 1) {
                     const ss = {
                         time: result.time,
                         stepBrewing: result.stepBrewing
@@ -113,7 +113,7 @@ export function getJson(url, arg, component) {
                 }
             },
             (error) => {
-                console.log('json err ' + error + '  ' + url);
+                console.log('Err ' + error + '  ' + url);
             }
         )
 }

@@ -102,7 +102,7 @@ class Navigation2 extends React.Component {
                             <Distillation heaterVal={ this.props.heaterVal } online={ this.props.online} onOnline={this.props.onOnline} />
                             <Reflux heaterVal={ this.props.heaterVal } online={ this.props.online } onOnline={this.props.onOnline} />
                             <Brewing online={ this.props.online } onOnline={this.props.onOnline}  />
-                            <Heater onOnSetHeater={this.props.onOnSetHeater}/>
+                            <Heater onOnSetHeater={this.props.onOnSetHeater} onOnline={this.props.onOnline}/>
                             <Camera/>
                         </Tab.Content>
                     </Col>
