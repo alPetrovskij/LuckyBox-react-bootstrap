@@ -173,9 +173,9 @@ class Brewing extends React.Component {
                     <Table responsive>
                         <thead>
                         <tr>
-                            <th>Пауза</th>
-                            <th>Время паузы</th>
-                            <th>&#176; паузы</th>
+                            <td>Пауза</td>
+                            <td>Время паузы</td>
+                            <td>&#176; паузы</td>
                         </tr>
                         </thead>
                         <tbody>

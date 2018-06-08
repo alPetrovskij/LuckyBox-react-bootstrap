@@ -135,10 +135,10 @@ class Reflux extends React.Component {
                     <Table responsive>
                         <thead>
                         <tr>
-                            <th>Параметр</th>
-                            <th>Значение</th>
-                            <th>Дельта&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                            <th>Уставка</th>
+                            <td>Параметр</td>
+                            <td>Значение</td>
+                            <td>Дельта&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            <td>Уставка</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -183,7 +183,7 @@ class Reflux extends React.Component {
                             <td colSpan="2"></td>
                         </tr>
                         <tr>
-                            <td>&#176; кипения спирта при данном давлении</td>
+                            <td>&#176; кипения спирта<br/>при данном давлении</td>
                             <td><FormControl type="text" value={temperatureAlcoholBoil} readOnly/></td>
                             <td colSpan="2"></td>
                         </tr>

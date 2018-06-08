@@ -52,12 +52,9 @@ class Distillation extends React.Component {
         this.flash = setInterval(
             () => {
                 if(this.state.settingAlarmDistillation){
-                    // this.setState({settingAlarmDistillationFlash: !this.state.settingAlarmDistillationFlash})
-
                     this.setState(prevState => ({
                         settingAlarmDistillationFlash: !prevState.settingAlarmDistillationFlash
                     }));
-
                 }
             },
             1000
@@ -128,10 +125,10 @@ class Distillation extends React.Component {
                     <Table responsive>
                         <thead>
                         <tr>
-                            <th>Температура</th>
-                            <th>Значение</th>
-                            <th>Установка&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                            <th>Уставка</th>
+                            <td>Температура</td>
+                            <td>Значение</td>
+                            <td>Установка&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            <td>Уставка</td>
                         </tr>
                         </thead>
                         <tbody>
